@@ -1,3 +1,14 @@
+# Notepad++ backups
+*.bak
+**/nppBackup
+
+# manual backups
+**/old
+*.zip
+
+# only for this project - no old info files...
+infos.ods
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
