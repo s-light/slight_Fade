@@ -133,7 +133,7 @@ void print_info(Print &pOut) {
 /**************************************************/
 slight_FaderLin myFaderOne(
 	0, // byte cbID_New
-	1, // byte cbChannelCount_New
+	100, // byte cbChannelCount_New
 	myFaderOne_callback_OutputChanged, // tCbfuncValuesChanged cbfuncValuesChanged_New
 	myCallback_onEvent // tCbfuncStateChanged cbfuncStateChanged_New
 );
@@ -713,13 +713,13 @@ void timeMeasurement_colums() {
 	Serial.print(F("\t"));
 	Serial.print(F("free RAM"));
 	Serial.print(F("\t"));
-	Serial.println(F("standby (ms/sum)"));
+	Serial.print(F("standby (ms/sum)"));
 	Serial.print(F("\t"));
-	Serial.println(F("standby (us/call)"));
+	Serial.print(F("standby (us/call)"));
 	Serial.print(F("\t"));
-	Serial.println(F("fading (ms/sum)"));
+	Serial.print(F("fading (ms/sum)"));
 	Serial.print(F("\t"));
-	Serial.println(F("fading (us/call)"));
+	Serial.print(F("fading (us/call)"));
 	Serial.print(F("\t"));
 
 	Serial.println();
@@ -750,7 +750,7 @@ void timeMeasurement_colums() {
 	myFaderOne.startFadeTo(0, waTemp);
 	waTemp[0] = 255;
 	waTemp[1] = 255;
-	myFaderOne.startFadeTo(10000, waTemp);
+	myFaderOne.startFadeTo(60000, waTemp);
 
 	ulTimeStamp = millis();
 	for (uint16_t wLoop = 0; wLoop < wLoopCount; wLoop++) {
@@ -764,7 +764,8 @@ void timeMeasurement_colums() {
 		(ulDuration / (float)wLoopCount) * 1000
 	);
 	Serial.print(F("\t"));
-	/** **/
+
+	Serial.println();
 }
 
 /************************************************/

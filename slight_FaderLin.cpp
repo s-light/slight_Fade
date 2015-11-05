@@ -4,7 +4,7 @@
 		concept for millis() based fading system
 
 	written by stefan krueger (s-light),
-		stefan@s-light.eu, http://s-light.eu, https://github.com/s-light/
+		github@s-light.eu, http://s-light.eu, https://github.com/s-light/
 
 	changelog / history
 		05.09.2013 10:00  created.
@@ -18,15 +18,14 @@
 		12.11.2013 13:45  state events handled by callback function.
 		13.11.2013 18:15  added ID
 		23.11.2013 19:09  fixed getCurrentValues
-		24.01.2013 11:03  changed library name from slight_FaderLin to slight_FaderLin
+		24.01.2013 11:03  changed library name to slight_FaderLin
 		25.01.2014 15:46  added printState function
 		09.03.2014 19:51  changed callback system to pInstance system.
 		15.05.2014 16:06  added option to specify current and target values outside of library (save ram)
 
 	TO DO:
 		~ test new added pointers.
-		~ develop new fading system thats resource friendly
-	see infos.ods
+		~ develop new fading system thats resource friendly (see infos.ods)
 
 ***************************************************************************************************/
 /**************************************************************************************************
@@ -221,6 +220,7 @@ boolean slight_FaderLin::isReady() {
 /**  Debug things                              **/
 /************************************************/
 
+#ifdef debug_slight_FaderLin
 /*
 void slight_FaderLin::printArray(uint16_t *array) {
 	Serial.print(F(" "));
@@ -260,6 +260,8 @@ void slight_FaderLin::printuint8_tAlignRight(uint8_t bValue) {
 	}
 	Serial.print(bValue);
 }
+
+#endif
 
 /************************************************/
 /**  Calc steps                                **/

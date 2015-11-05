@@ -2,7 +2,7 @@
 	slight_FaderLin Library
 		for more information changelog / history see slight_FaderLin.cpp
 	written by stefan krueger (s-light),
-		stefan@s-light.eu, http://s-light.eu, https://github.com/s-light/
+		github@s-light.eu, http://s-light.eu, https://github.com/s-light/
 **************************************************************************************************/
 /**************************************************************************************************
 	license
@@ -141,8 +141,10 @@ class slight_FaderLin {
 
 
 			// debug helpers
-			void printBinary8(uint8_t bIn);
-			void printuint8_tAlignRight(uint8_t bValue);
+			#ifdef debug_slight_FaderLin
+				void printBinary8(uint8_t bIn);
+				void printuint8_tAlignRight(uint8_t bValue);
+			#endif
 
 			uint8_t getBitPos(uint8_t bValue);
 
@@ -197,8 +199,9 @@ class slight_FaderLin {
 		*/
 
 		// private methods
-
-		void printArray(uint16_t *array);
+		#ifdef debug_slight_FaderLin
+			void printArray(uint16_t *array);
+		#endif
 
 		void generateEvent(uint8_t bEventNew);
 
