@@ -133,7 +133,7 @@ void print_info(Print &pOut) {
 /**************************************************/
 slight_FaderLin myFaderOne(
 	0, // byte cbID_New
-	100, // byte cbChannelCount_New
+	2, // byte cbChannelCount_New
 	myFaderOne_callback_OutputChanged, // tCbfuncValuesChanged cbfuncValuesChanged_New
 	myCallback_onEvent // tCbfuncStateChanged cbfuncStateChanged_New
 );
