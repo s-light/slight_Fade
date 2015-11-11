@@ -419,26 +419,19 @@ void handle_MainMenu(Print &pOut, char *caCommand) {
         //--------------------------------------------------------------------------------
         case 'f': {
             pOut.print(F("\t startFadeTo: "));
-            uint16_t uiValue = atoi(&caCommand[1]);
-            pOut.print(uiValue);
-            myFaderOne.startFadeTo(
-                5000,
-                fillTempArray(uiValue)
-            );
+            uint16_t value = atoi(&caCommand[1]);
+            pOut.print(value);
+            myFaderOne.startFadeTo(5000, value);
         } break;
         case 'A': {
             pOut.println(F("\t startFadeTo 0"));
-            myFaderOne.startFadeTo(
-                5000,
-                fillTempArray(0)
-            );
+            uint16_t value = 0;
+            myFaderOne.startFadeTo(5000, value);
         } break;
         case 'a': {
             pOut.println(F("\t startFadeTo 255"));
-            myFaderOne.startFadeTo(
-                5000,
-                fillTempArray(255)
-            );
+            uint16_t value = 255;
+            myFaderOne.startFadeTo(5000, value);
         } break;
         //--------------------------------------------------------------------------------
         case 's': {
@@ -565,15 +558,6 @@ void handle_SerialReceive() {
 /************************************************/
 /**  my Fader things                           **/
 /************************************************/
-
-uint16_t temp_array[myFaderOne__channel_count];
-
-uint16_t* fillTempArray(uint16_t uiValue) {
-    for (size_t i = 0; i < myFaderOne.getChannelCount(); i++) {
-        temp_array[i] = uiValue;
-    }
-    return temp_array;
-}
 
 void myFaderOne_callback_OutputChanged(byte bID, uint16_t *wValues, byte bCount) {
 

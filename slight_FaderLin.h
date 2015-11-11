@@ -68,18 +68,18 @@ class slight_FaderLin {
         // public definitions:
 
             // init
-            static const uint8_t event_NoEvent                =  0;
+            static const uint8_t event_NoEvent          =  0;
 
             // State
-            static const uint8_t event_StateChanged        = 10;
+            static const uint8_t event_StateChanged     = 10;
 
-            static const uint8_t state_NotValid            = 10;
-            static const uint8_t state_Standby                = 11;
-            static const uint8_t state_Fading                = 12;
+            static const uint8_t state_NotValid         = 10;
+            static const uint8_t state_Standby          = 11;
+            static const uint8_t state_Fading           = 12;
 
-            static const uint8_t event_fading_Stoped        = 30;
+            static const uint8_t event_fading_Stoped    = 30;
 
-            static const uint8_t event_fading_Finished        = 42;
+            static const uint8_t event_fading_Finished  = 42;
 
 
             //call back function definition
@@ -129,8 +129,8 @@ class slight_FaderLin {
             uint8_t update();
 
             // fader things
-            void startFadeTo(unsigned long ulFadeDuration_New, uint16_t *waValues_NewTarget);
-            //void startFadeTo(unsigned long ulFadeDuration_New, uint16_t wValues_NewTarget);
+            void startFadeTo(uint32_t ulFadeDuration_New, uint16_t wValue_NewTarget);
+            void startFadeTo(uint32_t ulFadeDuration_New, uint16_t *waValues_NewTarget);
             void stopFade();
 
             //uint16_t *getCurrentValues();

@@ -484,9 +484,11 @@ uint8_t slight_FaderLin::update() {
     return bState;
 }
 
-//start new Fade
-void slight_FaderLin::startFadeTo(unsigned long ulFadeDuration_New, uint16_t *waValues_NewTarget) {
-//void slight_FaderLin::startFadeTo(unsigned long ulFadeDuration_New, uint16_t wValues_NewTarget) {
+// start new Fade
+void slight_FaderLin::startFadeTo(
+    uint32_t ulFadeDuration_New,
+    uint16_t *waValues_NewTarget
+) {
     if (bReady == true) {
         #ifdef debug_slight_FaderLin
             Serial.print(F("startFadeTo:  ulFadeDuration_New: "));
@@ -497,22 +499,24 @@ void slight_FaderLin::startFadeTo(unsigned long ulFadeDuration_New, uint16_t *wa
 
         // Stop Fading
             Active = 0;
-            // reset variables.
+        // reset variables.
             flagFadingFinished = 1;
 
         if ( (flagFadingFinished) ) {
             // set Source and Target values
-            for ( uint8_t bIndex = 0; bIndex < cbChannelCount; bIndex++) {
+            for (uint8_t bIndex = 0; bIndex < cbChannelCount; bIndex++) {
                 // set Source values
                 waValues_Source[bIndex] = waValues_Current[bIndex];
                 // set Target Values
                 waValues_Target[bIndex] = waValues_NewTarget[bIndex];
-                //build Dif
+                // build Dif
                 if (waValues_Target[bIndex] > waValues_Source[bIndex]) {
-                    waValues_Dif[bIndex] = waValues_Target[bIndex] - waValues_Source[bIndex];
+                    waValues_Dif[bIndex] =
+                        waValues_Target[bIndex] - waValues_Source[bIndex];
                     baValues_DifIsNegativ[bIndex] = false;
                 } else {
-                    waValues_Dif[bIndex] = waValues_Source[bIndex] - waValues_Target[bIndex];
+                    waValues_Dif[bIndex] =
+                        waValues_Source[bIndex] - waValues_Target[bIndex];
                     baValues_DifIsNegativ[bIndex] = true;
                 }
             }
@@ -586,7 +590,7 @@ void slight_FaderLin::startFadeTo(unsigned long ulFadeDuration_New, uint16_t *wa
                 printArray(waValues_Target);
                 Serial.println();
             #endif
-            //just do the first calculation immediately
+            // just do the first calculation immediately
             update();
             #ifdef debug_slight_FaderLin
                 Serial.print(F("after update:target:"));
@@ -596,6 +600,20 @@ void slight_FaderLin::startFadeTo(unsigned long ulFadeDuration_New, uint16_t *wa
         }
     }
 }
+
+void slight_FaderLin::startFadeTo(
+    uint32_t ulFadeDuration_New,
+    uint16_t wValue_NewTarget
+) {
+    if (bReady == true) {
+        uint16_t temp_array[cbChannelCount];
+        for (size_t i = 0; i < cbChannelCount; i++) {
+            temp_array[i] = wValue_NewTarget;
+        }
+        startFadeTo(ulFadeDuration_New, temp_array);
+    }
+}
+
 
 void slight_FaderLin::stopFade() {
     if (bReady == true)
