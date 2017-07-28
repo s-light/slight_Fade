@@ -79,7 +79,7 @@
 // use "" for files in same directory as .ino
 //#include "file.h"
 
-#include "slight_FaderLin.h"
+#include <slight_FaderLin.h>
 
 /**************************************************************************************************/
 /** info                                                                                         **/
