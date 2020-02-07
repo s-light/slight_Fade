@@ -1,6 +1,6 @@
 /******************************************
 
-    slight_FaderLin__minimal
+    slight_FaderLin__basic
         minimal example for slight_Fade lib usage.
         debugport: serial interface 115200baud
 
@@ -48,19 +48,34 @@ https://opensource.org/licenses/mit-license.php
 // slight_Fade things
 
 byte led_1_pin = LED_BUILTIN;
+byte led_2_pin = 9;
 
 void myFaderOne_callback_OutputChanged(byte id, uint16_t *values, byte count) {
-    analogWrite(led_1_pin, values[0]);
+    // we use the fader id as pin number...
+    analogWrite(id, values[0]);
 }
 
-void myCallback_onEvent(slight_FaderLin *pInstance, byte event) {
-    // we do not use this..
-    1;
+void myCallback_onEvent(slight_FaderLin *instance, byte event) {
+    // react on events:
+    switch (event) {
+        case slight_FaderLin::event_fading_Finished : {
+            Serial.print(F("led on pin "));
+            Serial.print((*instance).getID());
+            Serial.print(F(": fading Finished."));
+            Serial.println();
+        } break;
+    } //end switch
 }
 
 
-slight_FaderLin myFaderOne(
-    0, // byte cbID_New
+slight_FaderLin myFader1(
+    led_1_pin, // byte cbID_New
+    1, // byte cbChannelCount_New
+    myFaderOne_callback_OutputChanged, // tCbfuncValuesChanged cbfuncValuesChanged_New
+    myCallback_onEvent // tCbfuncStateChanged cbfuncStateChanged_New
+);
+slight_FaderLin myFader2(
+    led_2_pin, // byte cbID_New
     1, // byte cbChannelCount_New
     myFaderOne_callback_OutputChanged, // tCbfuncValuesChanged cbfuncValuesChanged_New
     myCallback_onEvent // tCbfuncStateChanged cbfuncStateChanged_New
@@ -78,13 +93,13 @@ void handle_serial_input() {
                 Serial.println("start fade 1 on");
                 uint32_t duration = 2000; //ms
                 uint16_t target_value = 255;
-                myFaderOne.startFadeTo(duration, target_value);
+                myFader1.startFadeTo(duration, target_value);
             } break;
             case 'A': {
                 Serial.println("start fade 1 off");
                 uint32_t duration = 1000; //ms
                 uint16_t target_value = 1;
-                myFaderOne.startFadeTo(duration, target_value);
+                myFader1.startFadeTo(duration, target_value);
             } break;
             case 'a': {
                 Serial.println("start fade 1 half");
@@ -92,8 +107,20 @@ void handle_serial_input() {
                 uint16_t target_value = 100;
                 myFaderOne.startFadeTo(duration, target_value);
             } break;
+            case '2': {
+                Serial.println("start fade 2 on");
+                uint32_t duration = 4000; //ms
+                uint16_t target_value = 150;
+                myFader2.startFadeTo(duration, target_value);
+            } break;
+            case 'B': {
+                Serial.println("start fade 2 off");
+                uint32_t duration = 1000; //ms
+                uint16_t target_value = 0;
+                myFader2.startFadeTo(duration, target_value);
+            } break;
             default: {
-                Serial.println("type 1 or A to start one of the fades.");
+                Serial.println("type 1, A, 2, B to start one of the fades.");
             }
         }
 
@@ -119,17 +146,20 @@ void setup() {
 
     // ------------------------------------------
     // print short welcome text
-    Serial.println(F("slight_FaderLin__minimal.ino sketch."));
+    Serial.println(F("slight_FaderLin__basic.ino sketch."));
     Serial.println(F("minimal example for library usage."));
 
     pinMode(led_1_pin, OUTPUT);
     digitalWrite(led_1_pin, HIGH);
+    pinMode(led_2_pin, OUTPUT);
+    digitalWrite(led_2_pin, HIGH);
 
     // ------------------------------------------
     // start myFaderOne
     Serial.println(F("setup slight_FaderLin:")); {
-        Serial.println(F("  myFaderOne.begin();"));
-        myFaderOne.begin();
+        Serial.println(F("  myFader.begin();"));
+        myFader1.begin();
+        myFader2.begin();
     }
     Serial.println(F("  finished."));
 
@@ -142,7 +172,8 @@ void setup() {
 // main loop
 // ------------------------------------------
 void loop() {
-    myFaderOne.update();
+    myFader1.update();
+    myFader2.update();
     handle_serial_input();
 }
 

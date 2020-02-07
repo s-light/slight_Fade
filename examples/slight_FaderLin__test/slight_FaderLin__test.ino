@@ -576,15 +576,12 @@ void myFaderOne_callback_OutputChanged(byte bID, uint16_t *wValues, byte bCount)
 }
 
 void myCallback_onEvent(slight_FaderLin *pInstance, byte bEvent) {
-
-
     // Serial.print(F("Instance ID:"));
     // Serial.println((*pInstance).getID());
     //
     // Serial.print(F("Event: "));
     // (*pInstance).printEvent(Serial, bEvent);
     // Serial.println();
-
 
     // react on events:
     switch (bEvent) {
@@ -607,8 +604,6 @@ void myCallback_onEvent(slight_FaderLin *pInstance, byte bEvent) {
             //             //
             //         } break;
             // } //end switch
-
-
         } break;
 
         case slight_FaderLin::event_fading_Finished : {
