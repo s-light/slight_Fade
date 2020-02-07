@@ -1,3 +1,6 @@
+# arduino IDE build
+build
+
 # Notepad++ backups
 *.bak
 **/nppBackup
@@ -8,7 +11,6 @@
 
 # only for this project - no old info files...
 infos.ods
-infos.txt
 
 ## C & CPP things
 
@@ -40,8 +42,6 @@ infos.txt
 *.exe
 *.out
 *.app
-
-
 
 # Windows image file caches
 Thumbs.db
