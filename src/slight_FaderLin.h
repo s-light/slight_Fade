@@ -77,7 +77,7 @@ class slight_FaderLin {
             static const uint8_t state_Standby          = 11;
             static const uint8_t state_Fading           = 12;
 
-            static const uint8_t event_fading_Stoped    = 30;
+            static const uint8_t event_fading_Stopped   = 30;
 
             static const uint8_t event_fading_Finished  = 42;
 
@@ -121,7 +121,7 @@ class slight_FaderLin {
             uint8_t printState(Print &pOut);
 
             // event
-            uint8_t getLastEvent();
+            uint8_t getEventLast();
             uint8_t printEventLast(Print &pOut);
             uint8_t printEvent(Print &pOut, uint8_t bStateTemp);
 

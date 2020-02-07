@@ -9,6 +9,10 @@
 #Test	KEYWORD1
 tCallbackFunction	KEYWORD1
 
+tCbfuncStateChanged	KEYWORD1
+tcbfOnEvent	KEYWORD1
+tCbfuncValuesChanged	KEYWORD1
+
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
@@ -16,11 +20,18 @@ tCallbackFunction	KEYWORD1
 #something	KEYWORD2
 begin	KEYWORD2
 isReady	KEYWORD2
+getID	KEYWORD2
 getState	KEYWORD2
 printState	KEYWORD2
 getEventLast	KEYWORD2
 printEventLast	KEYWORD2
 printEvent	KEYWORD2
+
+startFadeTo	KEYWORD2
+stopFade	KEYWORD2
+
+getCurrentValues    KEYWORD2
+getChannelCount    KEYWORD2
 
 #######################################
 # Instances (KEYWORD2)
@@ -34,13 +45,6 @@ event_NoEvent	LITERAL1
 event_StateChanged	LITERAL1
 state_NotValid	LITERAL1
 state_Standby	LITERAL1
-state_Active	LITERAL1
-state_Debouncing	LITERAL1
-event_down	LITERAL1
-event_up	LITERAL1
-event_holddown	LITERAL1
-event_click	LITERAL1
-event_click_long	LITERAL1
-event_click_double	LITERAL1
-event_click_triple	LITERAL1
-event_click_multi	LITERAL1
+state_Fading	LITERAL1
+event_fading_Stopped	LITERAL1
+event_fading_Finished	LITERAL1

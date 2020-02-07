@@ -666,7 +666,7 @@ uint8_t slight_FaderLin::printState(Print &pOut) {
 };
 
 
-uint8_t slight_FaderLin::getLastEvent() {
+uint8_t slight_FaderLin::getEventLast() {
     return bEventLast;
 };
 
@@ -684,7 +684,7 @@ uint8_t slight_FaderLin::printEvent(Print &pOut, uint8_t bEventTemp) {
         case slight_FaderLin::event_fading_Finished: {
             pOut.print(F("fading finished"));
         } break;
-        case slight_FaderLin::event_fading_Stoped: {
+        case slight_FaderLin::event_fading_Stopped: {
             pOut.print(F("fading stoped"));
         } break;
 
