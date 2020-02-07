@@ -2,7 +2,7 @@
     slight_FaderLin Library
         for more information changelog / history see slight_FaderLin.cpp
     written by stefan krueger (s-light),
-        github@s-light.eu, http://s-light.eu, https://github.com/s-light/
+        git@s-light.eu, http://s-light.eu, https://github.com/s-light/
 **************************************************************************************************/
 /**************************************************************************************************
     license
@@ -12,7 +12,7 @@
         To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/3.0/.
 
     Apache License Version 2.0
-        Copyright 2014 Stefan Krueger
+        Copyright 2020 Stefan Krueger
 
         Licensed under the Apache License, Version 2.0 (the "License");
         you may not use this file except in compliance with the License.

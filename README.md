@@ -1,4 +1,4 @@
-# slight_FaderLin
+# slight_Fade
 arduino library for simple linear fading (LED or other things)
 
 the library can fade from the 'current' value to a new one in an given time.
