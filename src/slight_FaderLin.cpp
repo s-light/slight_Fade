@@ -148,7 +148,7 @@ slight_FaderLin::slight_FaderLin(
     waValues_Source = (uint16_t *)malloc(sizeof(uint16_t) * cbChannelCount);
     waValues_Current = (uint16_t *)malloc(sizeof(uint16_t) * cbChannelCount);
     waValues_Dif = (uint16_t *)malloc(sizeof(uint16_t) * cbChannelCount);
-    baValues_DifIsNegativ = (boolean *)malloc(sizeof(boolean)  * cbChannelCount);
+    baValues_DifIsNegativ = (bool *)malloc(sizeof(bool)  * cbChannelCount);
 
     /* //single channel version:
     wValues_Source = 0;
@@ -179,9 +179,9 @@ void slight_FaderLin::begin() {
         #endif
 
 
-        /**************************************************/
+        // ------------------------------------------
         /** ??                                           **/
-        /**************************************************/
+        // ------------------------------------------
 
         // clean up memory.
         for ( uint8_t bIndex = 0; bIndex < cbChannelCount; bIndex++) {
@@ -205,7 +205,7 @@ void slight_FaderLin::begin() {
     }
 }
 
-boolean slight_FaderLin::isReady() {
+bool slight_FaderLin::isReady() {
     return bReady;
 }
 
@@ -539,7 +539,7 @@ void slight_FaderLin::startFadeTo(
                 Serial.print(F("waValues_Dif   : "));
                 printArray(waValues_Dif);
                 Serial.println();
-                /* boolean is not supported jet..
+                /* bool is not supported jet..
                 Serial.print(F("baValues_DifIsNegativ: "));
                 printArray(baValues_DifIsNegativ);
                 Serial.println();*/

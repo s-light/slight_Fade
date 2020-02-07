@@ -111,7 +111,7 @@ class slight_FaderLin {
             void begin();
 
             // check if class is ready to operate.
-            boolean isReady();
+            bool isReady();
 
             // getID
             uint8_t getID();
@@ -157,7 +157,7 @@ class slight_FaderLin {
         const uint8_t cbID;
 
         // flag to check if the begin function is already called and the class is ready to work.
-        boolean bReady;
+        bool bReady;
 
         uint8_t bState;
 
@@ -173,8 +173,8 @@ class slight_FaderLin {
         //const tCbfuncStateChanged cbfuncStateChanged;
 
 
-        boolean flagFadingFinished;
-        boolean Active;
+        bool flagFadingFinished;
+        bool Active;
 
         //unsigned long ulTimeStamp_LastStep;
         unsigned long ulTimeStamp_FadeStart;
@@ -188,7 +188,7 @@ class slight_FaderLin {
         uint16_t *waValues_Target;
         uint16_t *waValues_Current;
         uint16_t *waValues_Dif;
-        boolean *baValues_DifIsNegativ;
+        bool *baValues_DifIsNegativ;
 
         // for testing --> SingleChannel Version
         /*
@@ -196,7 +196,7 @@ class slight_FaderLin {
         uint16_t wValues_Target;
         uint16_t wValues_Current;
         uint16_t wValues_Dif;
-        boolean bValues_DifIsNegativ;
+        bool bValues_DifIsNegativ;
         */
 
         // private methods

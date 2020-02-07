@@ -128,9 +128,9 @@ void print_info(Print &pOut) {
 /** libraries                                                                                    **/
 /**************************************************************************************************/
 
-/**************************************************/
+// ------------------------------------------
 /**  slight FaderLin                             **/
-/**************************************************/
+// ------------------------------------------
 const uint8_t myFaderOne__channel_count = 2;
 slight_FaderLin myFaderOne(
     0, // byte cbID_New
@@ -145,19 +145,19 @@ slight_FaderLin myFaderOne(
 /** definitions (gloabl)                                                                         **/
 /**************************************************************************************************/
 
-boolean bLEDState = 0;
+bool bLEDState = 0;
 const byte cbID_LED_Info = 9; //D9
 
 unsigned long ulDebugOut_LiveSign_TimeStamp_LastAction    = 0;
 const uint16_t cwDebugOut_LiveSign_UpdateInterval            = 1000; //ms
 
-boolean bDebugOut_LiveSign_Serial_Enabled    = 0;
-boolean bDebugOut_LiveSign_LED_Enabled    = 0;
+bool bDebugOut_LiveSign_Serial_Enabled    = 0;
+bool bDebugOut_LiveSign_LED_Enabled    = 0;
 
 
-/**************************************************/
+// ------------------------------------------
 /**  led and serial debug                        **/
-/**************************************************/
+// ------------------------------------------
 // myFaderOne output on:
 byte bPin_LED = 9;
 
@@ -170,14 +170,14 @@ byte bDebugOut_myFaderOne_Output_Enable        = 0;
 
 
 
-/**************************************************/
+// ------------------------------------------
 /** Menu Input                                   **/
-/**************************************************/
+// ------------------------------------------
 
 // a string to hold new data
 char  sMenu_Input_New[]                = "[ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, ]";
 // flag if string is complete
-boolean bMenu_Input_New_FlagComplete    = false;
+bool bMenu_Input_New_FlagComplete    = false;
 
 // string for Currently to process Command
 char  sMenu_Command_Current[]        = "[ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, ]";
@@ -619,9 +619,9 @@ void myCallback_onEvent(slight_FaderLin *pInstance, byte bEvent) {
 }
 
 
-/**************************************************/
+// ------------------------------------------
 /** Time Measurement                             **/
-/**************************************************/
+// ------------------------------------------
 void timeMeasurement_readable() {
     Serial.println(F("time measurement (can take some seconds): "));
 
@@ -875,21 +875,21 @@ void setup() {
 /****************************************************************************************************/
 void loop() {
 
-    /**************************************************/
+    // ------------------------------------------
     /** Menu Input                                   **/
-    /**************************************************/
+    // ------------------------------------------
         // Serial
         handle_SerialReceive();
         check_NewLineComplete();
 
-    /**************************************************/
+    // ------------------------------------------
     /** my fader                                     **/
-    /**************************************************/
+    // ------------------------------------------
         myFaderOne.update();
 
-    /**************************************************/
+    // ------------------------------------------
     /** Timed things                                 **/
-    /**************************************************/
+    // ------------------------------------------
 
         /*
         // every Nms
@@ -900,9 +900,9 @@ void loop() {
         */
 
 
-    /**************************************************/
+    // ------------------------------------------
     /** Debug Out                                    **/
-    /**************************************************/
+    // ------------------------------------------
 
         if ( (millis() - ulDebugOut_LiveSign_TimeStamp_LastAction) > cwDebugOut_LiveSign_UpdateInterval) {
             ulDebugOut_LiveSign_TimeStamp_LastAction = millis();
@@ -927,9 +927,9 @@ void loop() {
 
         }
 
-    /**************************************************/
+    // ------------------------------------------
     /**                                              **/
-    /**************************************************/
+    // ------------------------------------------
 
 } /** loop **/
 
