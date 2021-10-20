@@ -83,23 +83,23 @@ class slight_FaderLin {
 
 
             //call back function definition
-            typedef void (* tCbfuncStateChanged) (uint8_t bID, uint8_t bState);
+            typedef void (* tCbfuncStateChanged) (uint8_t bID, uint8_t state);
 
-            typedef void (* tcbfOnEvent) (slight_FaderLin *pInstance, uint8_t bEvent);
-            typedef void (* tCbfuncValuesChanged) (uint8_t bID, word *wValues, uint8_t bCount);
+            typedef void (* tcbfOnEvent) (slight_FaderLin *pInstance, uint8_t event);
+            typedef void (* tCbfuncValuesChanged) (uint8_t bID, uint16_t *values, uint8_t bCount);
 
         // public methods
 
             //Constructor
             //slight_FaderLin(uint8_t kChannelCount_Temp, tCbfuncValuesChanged cbfuncValuesChanged_Temp, tCbfuncStateChanged cbfuncStateChanged_Temp);
-            //slight_FaderLin(uint8_t cbID_New, uint8_t kChannelCount_New, tCbfuncValuesChanged cbfuncValuesChanged_New, tCbfuncStateChanged cbfuncStateChanged_New);
+            //slight_FaderLin(uint8_t kID_New, uint8_t kChannelCount_New, tCbfuncValuesChanged cbfuncValuesChanged_New, tCbfuncStateChanged cbfuncStateChanged_New);
             slight_FaderLin(
-                uint8_t cbID_New,
+                uint8_t kID_New,
                 uint8_t kChannelCount_New,
                 tCbfuncValuesChanged cbfuncValuesChanged_New,
                 tcbfOnEvent cbfCallbackOnEvent_New,
-                uint16_t *pValues_Current_new = NULL,
-                uint16_t *pValues_Target_new = NULL
+                uint16_t *values_Current_new = NULL,
+                uint16_t *values_Target_new = NULL
             );
 
 
@@ -118,19 +118,19 @@ class slight_FaderLin {
 
             // getState
             uint8_t getState();
-            uint8_t printState(Print &pOut);
+            uint8_t printState(Print &out);
 
             // event
             uint8_t getEventLast();
-            uint8_t printEventLast(Print &pOut);
-            uint8_t printEvent(Print &pOut, uint8_t bStateTemp);
+            uint8_t printEventLast(Print &out);
+            uint8_t printEvent(Print &out, uint8_t stateTemp);
 
             // update
             uint8_t update();
 
             // fader things
-            void startFadeTo(uint32_t ulFadeDuration_New, uint16_t wValue_NewTarget);
-            void startFadeTo(uint32_t ulFadeDuration_New, uint16_t *waValues_NewTarget);
+            void startFadeTo(uint32_t fadeDuration_New, uint16_t value_NewTarget);
+            void startFadeTo(uint32_t fadeDuration_New, uint16_t *values_NewTarget);
             void stopFade();
 
             //uint16_t *getCurrentValues();
@@ -154,16 +154,16 @@ class slight_FaderLin {
         // per object data
 
         // ID
-        const uint8_t cbID;
+        const uint8_t kID;
 
         // flag to check if the begin function is already called and the class is ready to work.
-        bool bReady;
+        bool ready;
 
-        uint8_t bState;
+        uint8_t state;
 
 
-        uint8_t bEvent;
-        uint8_t bEventLast;
+        uint8_t event;
+        uint8_t eventLast;
 
         const tcbfOnEvent cbfCallbackOnEvent;
 
@@ -176,26 +176,26 @@ class slight_FaderLin {
         bool flagFadingFinished;
         bool Active;
 
-        //unsigned long ulTimeStamp_LastStep;
-        unsigned long ulTimeStamp_FadeStart;
-        unsigned long ulFadeDuration;
+        //uint32_t ulTimeStamp_LastStep;
+        uint32_t timestamp_FadeStart;
+        uint32_t fadeDuration;
 
         // channels:
         const uint8_t kChannelCount;
 
         //http://forum.arduino.cc/index.php?topic=57433.msg412702#msg412702
-        uint16_t *waValues_Source;
-        uint16_t *waValues_Target;
-        uint16_t *waValues_Current;
-        uint16_t *waValues_Dif;
-        bool *baValues_DifIsNegativ;
+        uint16_t *values_Source;
+        uint16_t *values_Target;
+        uint16_t *values_Current;
+        uint16_t *values_Dif;
+        bool *values_DifIsNegativ;
 
         // for testing --> SingleChannel Version
         /*
-        uint16_t wValues_Source;
-        uint16_t wValues_Target;
-        uint16_t wValues_Current;
-        uint16_t wValues_Dif;
+        uint16_t values_Source;
+        uint16_t values_Target;
+        uint16_t values_Current;
+        uint16_t values_Dif;
         bool bValues_DifIsNegativ;
         */
 
@@ -204,7 +204,7 @@ class slight_FaderLin {
             void printArray(uint16_t *array);
         #endif
 
-        void generateEvent(uint8_t bEventNew);
+        void generateEvent(uint8_t eventNew);
 
 };
 

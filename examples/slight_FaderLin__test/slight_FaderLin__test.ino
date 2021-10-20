@@ -84,37 +84,37 @@
 /**************************************************************************************************/
 /** info                                                                                         **/
 /**************************************************************************************************/
-void print_info(Print &pOut) {
-    pOut.println();
+void print_info(Print &out) {
+    out.println();
     //             "|~~~~~~~~~|~~~~~~~~~|~~~..~~~|~~~~~~~~~|~~~~~~~~~|"
-    pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-    pOut.println(F("|                       ^ ^                      |"));
-    pOut.println(F("|                      (0,0)                     |"));
-    pOut.println(F("|                      ( _ )                     |"));
-    pOut.println(F("|                       \" \"                      |"));
-    pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-    pOut.println(F("| slight_FaderLin__test.ino"));
-    pOut.println(F("|   Sketch to test, develop and showcase functions of slight_FaderLin library"));
-    pOut.println(F("|"));
-    pOut.println(F("| This Sketch has a debug-menu:"));
-    pOut.println(F("| send '?'+Return for help"));
-    pOut.println(F("|"));
-    pOut.println(F("| dream on & have fun :-)"));
-    pOut.println(F("|"));
-    pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-    pOut.println(F("|"));
-    //pOut.println(F("| Version: Nov 11 2013  20:35:04"));
-    pOut.print(F("| version: "));
-    pOut.print(F(__DATE__));
-    pOut.print(F("  "));
-    pOut.print(F(__TIME__));
-    pOut.println();
-    pOut.println(F("|"));
-    pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-    pOut.println();
+    out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+    out.println(F("|                       ^ ^                      |"));
+    out.println(F("|                      (0,0)                     |"));
+    out.println(F("|                      ( _ )                     |"));
+    out.println(F("|                       \" \"                      |"));
+    out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+    out.println(F("| slight_FaderLin__test.ino"));
+    out.println(F("|   Sketch to test, develop and showcase functions of slight_FaderLin library"));
+    out.println(F("|"));
+    out.println(F("| This Sketch has a debug-menu:"));
+    out.println(F("| send '?'+Return for help"));
+    out.println(F("|"));
+    out.println(F("| dream on & have fun :-)"));
+    out.println(F("|"));
+    out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+    out.println(F("|"));
+    //out.println(F("| Version: Nov 11 2013  20:35:04"));
+    out.print(F("| version: "));
+    out.print(F(__DATE__));
+    out.print(F("  "));
+    out.print(F(__TIME__));
+    out.println();
+    out.println(F("|"));
+    out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+    out.println();
 
-    //pOut.println(__DATE__); Nov 11 2013
-    //pOut.println(__TIME__); 20:35:04
+    //out.println(__DATE__); Nov 11 2013
+    //out.println(__TIME__); 20:35:04
 }
 
 
@@ -133,7 +133,7 @@ void print_info(Print &pOut) {
 // ------------------------------------------
 const uint8_t myFaderOne__channel_count = 2;
 slight_FaderLin myFaderOne(
-    0, // byte cbID_New
+    0, // byte kID_New
     myFaderOne__channel_count, // byte kChannelCount_New
     myFaderOne_callback_OutputChanged, // tCbfuncValuesChanged cbfuncValuesChanged_New
     myCallback_onEvent // tCbfuncStateChanged cbfuncStateChanged_New
@@ -146,7 +146,7 @@ slight_FaderLin myFaderOne(
 /**************************************************************************************************/
 
 bool bLEDState = 0;
-const byte cbID_LED_Info = 9; //D9
+const byte kID_LED_Info = 9; //D9
 
 unsigned long ulDebugOut_LiveSign_TimeStamp_LastAction    = 0;
 const uint16_t cwDebugOut_LiveSign_UpdateInterval            = 1000; //ms
@@ -199,100 +199,100 @@ int freeRam () {
 }
 
 
-void printBinary8(Print &pOut, uint8_t iIn)  {
+void printBinary8(Print &out, uint8_t iIn)  {
 
     for (unsigned int mask = 0b10000000; mask; mask >>= 1) {
         if (mask & iIn) {
-            pOut.print('1');
+            out.print('1');
         }
         else {
-            pOut.print('0');
+            out.print('0');
         }
     }
 }
 
-void printBinary12(Print &pOut, uint16_t iIn)  {
+void printBinary12(Print &out, uint16_t iIn)  {
     //                       B12345678   B12345678
     //for (unsigned int mask = 0x8000; mask; mask >>= 1) {
     for (unsigned int mask = 0b100000000000; mask; mask >>= 1) {
         if (mask & iIn) {
-            pOut.print('1');
+            out.print('1');
         }
         else {
-            pOut.print('0');
+            out.print('0');
         }
     }
 }
 
-void printBinary16(Print &pOut, uint16_t iIn)  {
+void printBinary16(Print &out, uint16_t iIn)  {
     //                       0B12345678   B12345678
     for (unsigned int mask = 0b1000000000000000; mask; mask >>= 1) {
         if (mask & iIn) {
-            pOut.print('1');
+            out.print('1');
         }
         else {
-            pOut.print('0');
+            out.print('0');
         }
     }
 }
 
 
 
-void printArray_uint8(Print &pOut, byte *array, byte bCount) {
-    pOut.print(F(" "));
+void printArray_uint8(Print &out, byte *array, byte bCount) {
+    out.print(F(" "));
     byte bIndex = 0;
-    printAlignRight_uint8(pOut, array[bIndex]);
+    printAlignRight_uint8(out, array[bIndex]);
     for(bIndex = 1; bIndex < bCount; bIndex++){
-        pOut.print(F(", "));
-        printAlignRight_uint8(pOut, array[bIndex]);
+        out.print(F(", "));
+        printAlignRight_uint8(out, array[bIndex]);
     }
 }
 
-void printAlignRight_uint8(Print &pOut, byte bValue) {
+void printAlignRight_uint8(Print &out, byte bValue) {
     //byte bOffset = 0;
     if (bValue < 100) {
         if (bValue < 10) {
             //bOffset = 2;
-            pOut.print(F("  "));
+            out.print(F("  "));
         } else {
             //bOffset = 1;
-            pOut.print(F(" "));
+            out.print(F(" "));
         }
     }
-    pOut.print(bValue);
+    out.print(bValue);
 }
 
 
-void printArray_uint16(Print &pOut, uint16_t *array, byte bCount) {
-    pOut.print(F(" [ "));
+void printArray_uint16(Print &out, uint16_t *array, byte bCount) {
+    out.print(F(" [ "));
     byte bIndex = 0;
-    printAlignRight_uint16(pOut, array[bIndex]);
+    printAlignRight_uint16(out, array[bIndex]);
     for(bIndex = 1; bIndex < bCount; bIndex++){
-        pOut.print(F(", "));
-        printAlignRight_uint16(pOut, array[bIndex]);
+        out.print(F(", "));
+        printAlignRight_uint16(out, array[bIndex]);
     }
-    pOut.print(F("]"));
+    out.print(F("]"));
 }
 
-byte printAlignRight_uint16(Print &pOut, uint16_t wValue) {
+byte printAlignRight_uint16(Print &out, uint16_t wValue) {
     byte bLeadingZeros = 0;
     if (wValue < 10000) {
         bLeadingZeros = bLeadingZeros + 1;
-        pOut.print(F(" "));
+        out.print(F(" "));
         if (wValue < 1000) {
             bLeadingZeros = bLeadingZeros + 1;
-            pOut.print(F(" "));
+            out.print(F(" "));
             if (wValue < 100) {
                 bLeadingZeros = bLeadingZeros + 1;
-                pOut.print(F(" "));
+                out.print(F(" "));
                 if (wValue < 10) {
                     bLeadingZeros = bLeadingZeros + 1;
-                    pOut.print(F(" "));
+                    out.print(F(" "));
                 }
             }
         }
     }
-    pOut.print(wValue);
+    out.print(wValue);
     return bLeadingZeros;
 }
 
@@ -310,12 +310,12 @@ uint8_t bMenuMode = cbMenuMode_MainMenu;
 
 
 // SubMenu SetValues
-void handle_SubMenu1(Print &pOut, char *caCommand) {
-    pOut.println(F("SubMenu1:"));
-    pOut.print(F("\t caCommand: "));
-    pOut.println(caCommand);
-    pOut.println(F("\t nothing here."));
-    pOut.println(F("\t finished."));
+void handle_SubMenu1(Print &out, char *caCommand) {
+    out.println(F("SubMenu1:"));
+    out.print(F("\t caCommand: "));
+    out.println(caCommand);
+    out.println(F("\t nothing here."));
+    out.println(F("\t finished."));
     // exit submenu
     // reset state manschine of submenu
     // jump to main
@@ -325,111 +325,111 @@ void handle_SubMenu1(Print &pOut, char *caCommand) {
 
 
 // Main Menu
-void handle_MainMenu(Print &pOut, char *caCommand) {
-    /* pOut.print("sCommand: '");
-    pOut.print(sCommand);
-    pOut.println("'"); */
+void handle_MainMenu(Print &out, char *caCommand) {
+    /* out.print("sCommand: '");
+    out.print(sCommand);
+    out.println("'"); */
     switch (caCommand[0]) {
         case 'h':
         case 'H':
         case '?': {
             // help
-            pOut.println(F("____________________________________________________________"));
-            pOut.println();
-            pOut.println(F("Help for Commands:"));
-            pOut.println();
-            pOut.println(F("\t '?': this help"));
-            pOut.println(F("\t 'i': sketch info"));
-            pOut.println(F("\t 'y': toggle DebugOut livesign print"));
-            pOut.println(F("\t 'Y': toggle DebugOut livesign LED"));
-            pOut.println(F("\t 'x': run performance test"));
-            pOut.println(F("\t 'X': tests"));
-            pOut.println();
-            pOut.println(F("\t 'f': startFadeTo(ID, value) 'f65535'"));
-            pOut.println(F("\t 'a': myFaderOne.startFadeTo 0"));
-            pOut.println(F("\t 'A': myFaderOne.startFadeTo 255"));
-            pOut.println();
-            pOut.println(F("\t 'set:' enter SubMenu1"));
-            pOut.println();
-            pOut.println(F("____________________________________________________________"));
+            out.println(F("____________________________________________________________"));
+            out.println();
+            out.println(F("Help for Commands:"));
+            out.println();
+            out.println(F("\t '?': this help"));
+            out.println(F("\t 'i': sketch info"));
+            out.println(F("\t 'y': toggle DebugOut livesign print"));
+            out.println(F("\t 'Y': toggle DebugOut livesign LED"));
+            out.println(F("\t 'x': run performance test"));
+            out.println(F("\t 'X': tests"));
+            out.println();
+            out.println(F("\t 'f': startFadeTo(ID, value) 'f65535'"));
+            out.println(F("\t 'a': myFaderOne.startFadeTo 0"));
+            out.println(F("\t 'A': myFaderOne.startFadeTo 255"));
+            out.println();
+            out.println(F("\t 'set:' enter SubMenu1"));
+            out.println();
+            out.println(F("____________________________________________________________"));
         } break;
         case 'i': {
-            print_info(pOut);
+            print_info(out);
         } break;
         case 'y': {
-            pOut.println(F("\t toggle DebugOut livesign Serial:"));
+            out.println(F("\t toggle DebugOut livesign Serial:"));
             bDebugOut_LiveSign_Serial_Enabled = !bDebugOut_LiveSign_Serial_Enabled;
-            pOut.print(F("\t bDebugOut_LiveSign_Serial_Enabled:"));
-            pOut.println(bDebugOut_LiveSign_Serial_Enabled);
+            out.print(F("\t bDebugOut_LiveSign_Serial_Enabled:"));
+            out.println(bDebugOut_LiveSign_Serial_Enabled);
         } break;
         case 'Y': {
-            pOut.println(F("\t toggle DebugOut livesign LED:"));
+            out.println(F("\t toggle DebugOut livesign LED:"));
             bDebugOut_LiveSign_LED_Enabled = !bDebugOut_LiveSign_LED_Enabled;
-            pOut.print(F("\t bDebugOut_LiveSign_LED_Enabled:"));
-            pOut.println(bDebugOut_LiveSign_LED_Enabled);
+            out.print(F("\t bDebugOut_LiveSign_LED_Enabled:"));
+            out.println(bDebugOut_LiveSign_LED_Enabled);
         } break;
         case 'X': {
             // get state
-            pOut.println(F("__________"));
-            pOut.println(F("Tests:"));
+            out.println(F("__________"));
+            out.println(F("Tests:"));
 
-            // pOut.println(F("nothing to do."));
+            // out.println(F("nothing to do."));
 
             // uint16_t wTest = 65535;
             // uint16_t wTest = atoi(&caCommand[1]);
-            // pOut.print(F("wTest: "));
-            // pOut.print(wTest);
-            // pOut.println();
+            // out.print(F("wTest: "));
+            // out.print(wTest);
+            // out.println();
             //
-            // pOut.print(F("1: "));
-            // pOut.print((byte)wTest);
-            // pOut.println();
+            // out.print(F("1: "));
+            // out.print((byte)wTest);
+            // out.println();
             //
-            // pOut.print(F("2: "));
-            // pOut.print((byte)(wTest>>8));
-            // pOut.println();
+            // out.print(F("2: "));
+            // out.print((byte)(wTest>>8));
+            // out.println();
 
-            pOut.println(F("* get a value from input:"));
+            out.println(F("* get a value from input:"));
             uint16_t uiValue = atoi(&caCommand[1]);
 
-            pOut.println(F("* create temp array"));
+            out.println(F("* create temp array"));
             uint16_t uiaTemp[myFaderOne.getChannelCount()];
 
-            pOut.println(F("* set values"));
+            out.println(F("* set values"));
             // memset is only working on 8bit value..
             // memset(uiaTemp, uiValue, size)
             for (size_t i = 0; i < myFaderOne.getChannelCount(); i++) {
                 uiaTemp[i] = uiValue;
             }
 
-            pOut.println(F("* print result"));
-            printArray_uint16(pOut, uiaTemp, myFaderOne.getChannelCount());
+            out.println(F("* print result"));
+            printArray_uint16(out, uiaTemp, myFaderOne.getChannelCount());
 
-            pOut.println();
+            out.println();
 
-            pOut.println(F("__________"));
+            out.println(F("__________"));
         } break;
         case 'x': {
-            pOut.println(F("__________"));
-            pOut.println(F("Run Performance Test:"));
+            out.println(F("__________"));
+            out.println(F("Run Performance Test:"));
             // timeMeasurement_readable();
             timeMeasurement_colums();
-            pOut.println(F("__________"));
+            out.println(F("__________"));
         } break;
         //--------------------------------------------------------------------------------
         case 'f': {
-            pOut.print(F("\t startFadeTo: "));
+            out.print(F("\t startFadeTo: "));
             uint16_t value = atoi(&caCommand[1]);
-            pOut.print(value);
+            out.print(value);
             myFaderOne.startFadeTo(5000, value);
         } break;
         case 'A': {
-            pOut.println(F("\t startFadeTo 0"));
+            out.println(F("\t startFadeTo 0"));
             uint16_t value = 0;
             myFaderOne.startFadeTo(5000, value);
         } break;
         case 'a': {
-            pOut.println(F("\t startFadeTo 255"));
+            out.println(F("\t startFadeTo 255"));
             uint16_t value = 255;
             myFaderOne.startFadeTo(5000, value);
         } break;
@@ -441,7 +441,7 @@ void handle_MainMenu(Print &pOut, char *caCommand) {
                 bMenuMode = cbMenuMode_SubMenu1;
                 if(1){    //if ( caCommand[4] != '\0' ) {
                     //full length command
-                    //handle_SetValues(pOut, &caCommand[4]);
+                    //handle_SetValues(out, &caCommand[4]);
                 } else {
                     bMenu_Input_New_FlagComplete = true;
                 }
@@ -449,9 +449,9 @@ void handle_MainMenu(Print &pOut, char *caCommand) {
         } break;
         //--------------------------------------------------------------------------------
         default: {
-            pOut.print(F("command '"));
-            pOut.print(caCommand);
-            pOut.println(F("' not recognized. try again."));
+            out.print(F("command '"));
+            out.print(caCommand);
+            out.println(F("' not recognized. try again."));
             sMenu_Input_New[0] = '?';
             bMenu_Input_New_FlagComplete = true;
         }
@@ -462,13 +462,13 @@ void handle_MainMenu(Print &pOut, char *caCommand) {
 
 
 // Menu Switcher
-void menuSwitcher(Print &pOut, char *caCommand) {
+void menuSwitcher(Print &out, char *caCommand) {
     switch (bMenuMode) {
             case cbMenuMode_MainMenu: {
-                handle_MainMenu(pOut, caCommand);
+                handle_MainMenu(out, caCommand);
             } break;
             case cbMenuMode_SubMenu1: {
-                handle_SubMenu1(pOut, caCommand);
+                handle_SubMenu1(out, caCommand);
             } break;
             default: {
                 // something went wronge - so reset and show MainMenu
@@ -478,15 +478,15 @@ void menuSwitcher(Print &pOut, char *caCommand) {
 }
 
 // Check for NewLineComplete and enter menuSwitcher
-// sets Menu Output channel (pOut)
+// sets Menu Output channel (out)
 void check_NewLineComplete() {
     // if SMenuCurrent is a full Line (terminated with \n) than parse things
     if (bMenu_Input_New_FlagComplete) {
         // Serial.print(F("bMenu_Input_New_FlagComplete: sMenu_Input_New: '"));
         // Serial.print(sMenu_Input_New);
         // Serial.println(F("'"));
-        // Serial.print(F("   bState_UI: '"));
-        // Serial.print(bState_UI);
+        // Serial.print(F("   state_UI: '"));
+        // Serial.print(state_UI);
         // Serial.println(F("'"));
 
 
@@ -575,16 +575,16 @@ void myFaderOne_callback_OutputChanged(byte bID, uint16_t *wValues, byte bCount)
     }*/
 }
 
-void myCallback_onEvent(slight_FaderLin *pInstance, byte bEvent) {
+void myCallback_onEvent(slight_FaderLin *pInstance, byte event) {
     // Serial.print(F("Instance ID:"));
     // Serial.println((*pInstance).getID());
     //
     // Serial.print(F("Event: "));
-    // (*pInstance).printEvent(Serial, bEvent);
+    // (*pInstance).printEvent(Serial, event);
     // Serial.println();
 
     // react on events:
-    switch (bEvent) {
+    switch (event) {
         case slight_FaderLin::event_StateChanged : {
             // Serial.print(F("slight_FaderLin "));
             // Serial.print((*pInstance).getID());
@@ -593,7 +593,7 @@ void myCallback_onEvent(slight_FaderLin *pInstance, byte bEvent) {
             // (*pInstance).printState(Serial);
             // Serial.println();
 
-            // switch (bState) {
+            // switch (state) {
             //     case slight_FaderLin::state_Standby : {
             //             //
             //         } break;
@@ -765,8 +765,8 @@ void setup() {
     // ------------------------------------------
 
         //LiveSign
-        pinMode(cbID_LED_Info, OUTPUT);
-        digitalWrite(cbID_LED_Info, HIGH);
+        pinMode(kID_LED_Info, OUTPUT);
+        digitalWrite(kID_LED_Info, HIGH);
 
         pinMode(bPin_LED, OUTPUT);
         digitalWrite(bPin_LED, HIGH);
@@ -913,10 +913,10 @@ void loop() {
                 bLEDState = ! bLEDState;
                 if (bLEDState) {
                     //set LED to HIGH
-                    digitalWrite(cbID_LED_Info, HIGH);
+                    digitalWrite(kID_LED_Info, HIGH);
                 } else {
                     //set LED to LOW
-                    digitalWrite(cbID_LED_Info, LOW);
+                    digitalWrite(kID_LED_Info, LOW);
                 }
             }
 

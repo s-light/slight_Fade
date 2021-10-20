@@ -60,7 +60,7 @@ void myCallback_onEvent(slight_FaderLin *pInstance, byte event) {
 
 
 slight_FaderLin myFaderOne(
-    0, // byte cbID_New
+    0, // byte kID_New
     1, // byte kChannelCount_New
     myFaderOne_callback_OutputChanged, // tCbfuncValuesChanged cbfuncValuesChanged_New
     myCallback_onEvent // tCbfuncStateChanged cbfuncStateChanged_New
