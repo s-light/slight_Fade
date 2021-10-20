@@ -70,13 +70,13 @@ void myCallback_onEvent(slight_FaderLin *instance, byte event) {
 
 slight_FaderLin myFader1(
     led_1_pin, // byte cbID_New
-    1, // byte cbChannelCount_New
+    1, // byte kChannelCount_New
     myFaderOne_callback_OutputChanged, // tCbfuncValuesChanged cbfuncValuesChanged_New
     myCallback_onEvent // tCbfuncStateChanged cbfuncStateChanged_New
 );
 slight_FaderLin myFader2(
     led_2_pin, // byte cbID_New
-    1, // byte cbChannelCount_New
+    1, // byte kChannelCount_New
     myFaderOne_callback_OutputChanged, // tCbfuncValuesChanged cbfuncValuesChanged_New
     myCallback_onEvent // tCbfuncStateChanged cbfuncStateChanged_New
 );

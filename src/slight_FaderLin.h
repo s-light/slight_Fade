@@ -55,9 +55,9 @@
 
 /** Includes Core Arduino functionality **/
 #if ARDUINO < 100
-#include <WProgram.h>
+    #include <WProgram.h>
 #else
-#include <Arduino.h>
+    #include <Arduino.h>
 #endif
 
 
@@ -91,11 +91,11 @@ class slight_FaderLin {
         // public methods
 
             //Constructor
-            //slight_FaderLin(uint8_t cbChannelCount_Temp, tCbfuncValuesChanged cbfuncValuesChanged_Temp, tCbfuncStateChanged cbfuncStateChanged_Temp);
-            //slight_FaderLin(uint8_t cbID_New, uint8_t cbChannelCount_New, tCbfuncValuesChanged cbfuncValuesChanged_New, tCbfuncStateChanged cbfuncStateChanged_New);
+            //slight_FaderLin(uint8_t kChannelCount_Temp, tCbfuncValuesChanged cbfuncValuesChanged_Temp, tCbfuncStateChanged cbfuncStateChanged_Temp);
+            //slight_FaderLin(uint8_t cbID_New, uint8_t kChannelCount_New, tCbfuncValuesChanged cbfuncValuesChanged_New, tCbfuncStateChanged cbfuncStateChanged_New);
             slight_FaderLin(
                 uint8_t cbID_New,
-                uint8_t cbChannelCount_New,
+                uint8_t kChannelCount_New,
                 tCbfuncValuesChanged cbfuncValuesChanged_New,
                 tcbfOnEvent cbfCallbackOnEvent_New,
                 uint16_t *pValues_Current_new = NULL,
@@ -181,7 +181,7 @@ class slight_FaderLin {
         unsigned long ulFadeDuration;
 
         // channels:
-        const uint8_t cbChannelCount;
+        const uint8_t kChannelCount;
 
         //http://forum.arduino.cc/index.php?topic=57433.msg412702#msg412702
         uint16_t *waValues_Source;

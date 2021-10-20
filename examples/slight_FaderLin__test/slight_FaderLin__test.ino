@@ -134,7 +134,7 @@ void print_info(Print &pOut) {
 const uint8_t myFaderOne__channel_count = 2;
 slight_FaderLin myFaderOne(
     0, // byte cbID_New
-    myFaderOne__channel_count, // byte cbChannelCount_New
+    myFaderOne__channel_count, // byte kChannelCount_New
     myFaderOne_callback_OutputChanged, // tCbfuncValuesChanged cbfuncValuesChanged_New
     myCallback_onEvent // tCbfuncStateChanged cbfuncStateChanged_New
 );
