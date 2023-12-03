@@ -95,7 +95,7 @@ class slight_FaderLin {
             //slight_FaderLin(uint8_t kID_New, uint8_t kChannelCount_New, tCbfuncValuesChanged cbfuncValuesChanged_New, tCbfuncStateChanged cbfuncStateChanged_New);
             slight_FaderLin(
                 uint8_t kID_New,
-                uint8_t kChannelCount_New,
+                uint8_t kChannelCount_New,  
                 tCbfuncValuesChanged cbfuncValuesChanged_New,
                 tcbfOnEvent cbfCallbackOnEvent_New,
                 uint16_t *values_Current_new = NULL,
@@ -165,12 +165,15 @@ class slight_FaderLin {
         uint8_t event;
         uint8_t eventLast;
 
-        const tcbfOnEvent cbfCallbackOnEvent;
 
+        // channels:
+        const uint8_t kChannelCount;
 
         //call back functions:
         const tCbfuncValuesChanged cbfuncValuesChanged;
         //const tCbfuncStateChanged cbfuncStateChanged;
+
+        const tcbfOnEvent cbfCallbackOnEvent;
 
 
         bool flagFadingFinished;
@@ -180,8 +183,6 @@ class slight_FaderLin {
         uint32_t timestamp_FadeStart;
         uint32_t fadeDuration;
 
-        // channels:
-        const uint8_t kChannelCount;
 
         //http://forum.arduino.cc/index.php?topic=57433.msg412702#msg412702
         uint16_t *values_Source;
