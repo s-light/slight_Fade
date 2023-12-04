@@ -111,7 +111,6 @@ public:
         slight_FaderLin *instance, uint16_t *values, uint8_t count);
     using tCallbackFunction = void (*)(slight_FaderLin *instance);
 #elif defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_ESP32)
-    // using tCallbackFunction = std::function<void(uint8_t)>;
     using tCallbackFunctionValuesChanged = std::function<void(
         slight_FaderLin *instance, uint16_t *values, uint8_t count)>;
     using tCallbackFunction = std::function<void(slight_FaderLin *instance)>;
@@ -128,7 +127,7 @@ public:
     // tCallbackFunctionValuesChanged cbfuncValuesChanged_New, tCbfuncStateChanged
     // cbfuncStateChanged_New);
     slight_FaderLin(uint8_t kID_New, uint8_t channelCount_New,
-                    tCallbackFunctionValuesChanged cbfuncValuesChanged_New,
+                    tCallbackFunctionValuesChanged callbackValuesChanged_New,
                     tCallbackFunction callbackOnEvent_new,
                     uint16_t *values_Current_new = NULL,
                     uint16_t *values_Target_new = NULL);
@@ -198,6 +197,7 @@ private:
     // call back functions:
     const tCallbackFunction callbackOnEvent;
     const tCallbackFunctionValuesChanged callbackValuesChanged;
+    // const tCallbackFunction callbackValuesChanged;
 
     bool flagFadingFinished;
     bool Active;

@@ -94,8 +94,10 @@
 slight_FaderLin::slight_FaderLin(
     uint8_t kID_New, uint8_t channelCount_New,
     tCallbackFunctionValuesChanged callbackValuesChanged_new,
-    tCallbackFunction callbackOnEvent_new, uint16_t *values_Current_new,
-    uint16_t *values_Target_new )
+    tCallbackFunction callbackOnEvent_new,
+    uint16_t *values_Current_new,
+    uint16_t *values_Target_new 
+    )
     : kID(kID_New), channelCount(channelCount_New),
       callbackValuesChanged(callbackValuesChanged_new),
       callbackOnEvent(callbackOnEvent_new)
@@ -369,6 +371,7 @@ uint8_t slight_FaderLin::update() {
                 if (bFlag_NewValues) {
                     // call cbfunc for updating output values.
                     callbackValuesChanged(this, values_Current, channelCount);
+                    // callbackValuesChanged(this);
                 }
 
                 #ifdef debug_slight_FaderLin
@@ -439,6 +442,7 @@ uint8_t slight_FaderLin::update() {
 
                 // call cbfunc for updating output values.
                 callbackValuesChanged(this, values_Current, channelCount);
+                // callbackValuesChanged(this);
 
                 #ifdef debug_slight_FaderLin
                     Serial.print(F("ff:target:"));

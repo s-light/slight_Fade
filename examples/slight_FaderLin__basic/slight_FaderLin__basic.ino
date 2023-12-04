@@ -40,9 +40,7 @@ SOFTWARE.
 https://opensource.org/licenses/mit-license.php
 ******************************************/
 
-
 #include <slight_FaderLin.h>
-
 
 // ------------------------------------------
 // slight_Fade things
@@ -50,10 +48,13 @@ https://opensource.org/licenses/mit-license.php
 byte led_1_pin = LED_BUILTIN;
 byte led_2_pin = 9;
 
-
-void myCallback_ValuesChanged(slight_FaderLin *pInstance,
-                                       uint16_t *values, byte count) {
+// void myCallback_ValuesChanged(slight_FaderLin *pInstance) {
+void myCallback_ValuesChanged(slight_FaderLin *pInstance, uint16_t *values,
+                              byte count) {
     uint8_t pin = pInstance->getID();
+    // uint8_t count = pInstance->getChannelCount();
+    // uint16_t *values;
+    // pInstance->getCurrentValues(values);
     // uint8_t pin = (*instance).getID();
     analogWrite(pin, values[0]);
 }
@@ -66,8 +67,8 @@ void myCallback_onEvent(slight_FaderLin *instance) {
         Serial.print((*instance).getID());
         Serial.print(F(": fading Finished."));
         Serial.println();
-        } break;
-        } // end switch
+    } break;
+    } // end switch
 }
 
 slight_FaderLin myFader1 =
@@ -75,14 +76,13 @@ slight_FaderLin myFader1 =
                     1,                        // byte channelCount
                     myCallback_ValuesChanged, // tCallbackFunctionValuesChanged
                     myCallback_onEvent        // tCallbackFunction
-
     );
-slight_FaderLin myFader2(
-    led_2_pin,                         // byte kID
-    1,                                 // byte channelCount
-    myCallback_ValuesChanged, // tCallbackFunctionValuesChanged
-    myCallback_onEvent                 // tCallbackFunction
-);
+slight_FaderLin myFader2 =
+    slight_FaderLin(led_2_pin,                // byte kID
+                    1,                        // byte channelCount
+                    myCallback_ValuesChanged, // tCallbackFunctionValuesChanged
+                    myCallback_onEvent        // tCallbackFunction
+    );
 
 void handle_serial_input() {
     if (Serial.available() > 0) {
@@ -91,46 +91,45 @@ void handle_serial_input() {
 
         // check what to do:
         switch (input) {
-            case '1': {
-                Serial.println("start fade 1 on");
-                uint32_t duration = 2000; //ms
-                uint16_t target_value = 255;
-                myFader1.startFadeTo(duration, target_value);
-            } break;
-            case 'A': {
-                Serial.println("start fade 1 off");
-                uint32_t duration = 1000; //ms
-                uint16_t target_value = 1;
-                myFader1.startFadeTo(duration, target_value);
-            } break;
-            case 'a': {
-                Serial.println("start fade 1 half");
-                uint32_t duration = 1000; //ms
-                uint16_t target_value = 100;
-                myFader1.startFadeTo(duration, target_value);
-            } break;
-            case '2': {
-                Serial.println("start fade 2 on");
-                uint32_t duration = 4000; //ms
-                uint16_t target_value = 150;
-                myFader2.startFadeTo(duration, target_value);
-            } break;
-            case 'B': {
-                Serial.println("start fade 2 off");
-                uint32_t duration = 1000; //ms
-                uint16_t target_value = 0;
-                myFader2.startFadeTo(duration, target_value);
-            } break;
-            default: {
-                Serial.println("type 1, A, 2, B to start one of the fades.");
-            }
+        case '1': {
+            Serial.println("start fade 1 on");
+            uint32_t duration = 2000; // ms
+            uint16_t target_value = 255;
+            myFader1.startFadeTo(duration, target_value);
+        } break;
+        case 'A': {
+            Serial.println("start fade 1 off");
+            uint32_t duration = 1000; // ms
+            uint16_t target_value = 1;
+            myFader1.startFadeTo(duration, target_value);
+        } break;
+        case 'a': {
+            Serial.println("start fade 1 half");
+            uint32_t duration = 1000; // ms
+            uint16_t target_value = 100;
+            myFader1.startFadeTo(duration, target_value);
+        } break;
+        case '2': {
+            Serial.println("start fade 2 on");
+            uint32_t duration = 4000; // ms
+            uint16_t target_value = 150;
+            myFader2.startFadeTo(duration, target_value);
+        } break;
+        case 'B': {
+            Serial.println("start fade 2 off");
+            uint32_t duration = 1000; // ms
+            uint16_t target_value = 0;
+            myFader2.startFadeTo(duration, target_value);
+        } break;
+        default: {
+            Serial.println("type 1, A, 2, B to start one of the fades.");
+        }
         }
 
         // clear input buffer
         while (Serial.available()) {
             Serial.read();
         }
-
     }
 }
 
@@ -158,7 +157,8 @@ void setup() {
 
     // ------------------------------------------
     // start myFaderOne
-    Serial.println(F("setup slight_FaderLin:")); {
+    Serial.println(F("setup slight_FaderLin:"));
+    {
         Serial.println(F("  myFader.begin();"));
         myFader1.begin();
         myFader2.begin();
@@ -169,7 +169,6 @@ void setup() {
     Serial.println(F("Loop:"));
 }
 
-
 // ------------------------------------------
 // main loop
 // ------------------------------------------
@@ -178,7 +177,6 @@ void loop() {
     myFader2.update();
     handle_serial_input();
 }
-
 
 // ------------------------------------------
 // THE END :-)
