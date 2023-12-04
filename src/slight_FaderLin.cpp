@@ -323,10 +323,10 @@ bool slight_FaderLin::calculate_values(uint32_t ulDurationTemp) {
         use: ((wValues_Dif * ulDurationTemp) / fadeDuration)
     */
 
-    #ifdef debug_slight_FaderLin
-        Serial.print(F("u 2.0:target:"));
-        printArray(values_Target);
-        Serial.println();
+#ifdef debug_slight_FaderLin
+    Serial.print(F("u 2.0:target:"));
+    printArray(values_Target);
+    Serial.println();
 #endif
 
     bool bFlag_NewValues = 0;
@@ -486,7 +486,8 @@ uint8_t slight_FaderLin::update() {
 
 // start new Fade
 void slight_FaderLin::startFadeTo(uint32_t fadeDuration_New,
-                                  uint16_t *values_NewTarget) {
+                                  uint16_t *values_NewTarget,
+                                  uint16_t *values_uCurrent) {
     if (ready == true) {
 #ifdef debug_slight_FaderLin
         Serial.print(F("startFadeTo:  fadeDuration_New: "));
@@ -504,7 +505,12 @@ void slight_FaderLin::startFadeTo(uint32_t fadeDuration_New,
             // set Source and Target values
             for (uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
                 // set Source values
-                values_Source[ch_index] = values_Current[ch_index];
+                if (values_uCurrent) {
+                    // use user given start values
+                    values_Source[ch_index] = values_uCurrent[ch_index];
+                } else {
+                    values_Source[ch_index] = values_Current[ch_index];
+                }
                 // set Target Values
                 values_Target[ch_index] = values_NewTarget[ch_index];
                 // build Dif
@@ -604,6 +610,22 @@ void slight_FaderLin::startFadeTo(uint32_t fadeDuration_New,
             temp_array[i] = value_NewTarget;
         }
         startFadeTo(fadeDuration_New, temp_array);
+    }
+}
+
+void slight_FaderLin::startFadeTo(uint32_t fadeDuration_New,
+                                  uint16_t value_NewTarget,
+                                  uint16_t value_uCurrent) {
+    if (ready == true) {
+        uint16_t temp_array[channelCount];
+        for (size_t i = 0; i < channelCount; i++) {
+            temp_array[i] = value_NewTarget;
+        }
+        uint16_t temp_array2[channelCount];
+        for (size_t i = 0; i < channelCount; i++) {
+            temp_array2[i] = value_uCurrent;
+        }
+        startFadeTo(fadeDuration_New, temp_array, temp_array2);
     }
 }
 

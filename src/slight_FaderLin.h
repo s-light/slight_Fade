@@ -158,7 +158,9 @@ public:
 
     // fader things
     void startFadeTo(uint32_t fadeDuration_New, uint16_t value_NewTarget);
-    void startFadeTo(uint32_t fadeDuration_New, uint16_t *values_NewTarget);
+    void startFadeTo(uint32_t fadeDuration_New, uint16_t value_NewTarget, uint16_t value_uCurrent);
+    // void startFadeTo(uint32_t fadeDuration_New, uint16_t *values_NewTarget);
+    void startFadeTo(uint32_t fadeDuration_New, uint16_t *values_NewTarget, uint16_t *values_uCurrent = NULL);
     void stopFade();
 
     // uint16_t *getCurrentValues();
