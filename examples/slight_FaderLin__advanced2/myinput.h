@@ -71,6 +71,8 @@ public:
     void myFader_valuesChanged(slight_FaderLin *instance, uint16_t *values, uint8_t count);
     void myFader_event(slight_FaderLin *instance);
 
+    uint16_t *values_Current;
+
     slight_FaderLin myFader = slight_FaderLin(
         // uint8_t id_new
         LED_BUILTIN,
@@ -79,9 +81,10 @@ public:
         // values changed
         // https://stackoverflow.com/questions/14189440/c-callback-using-class-member#comment110410484_14189561
         std::bind(&MyInput::myFader_valuesChanged, this, std::placeholders::_1,
-                   std::placeholders::_2, std::placeholders::_3),
+                  std::placeholders::_2, std::placeholders::_3),
         // event
-        std::bind(&MyInput::myFader_event, this, std::placeholders::_1));
+        std::bind(&MyInput::myFader_event, this, std::placeholders::_1),
+        values_Current);
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations

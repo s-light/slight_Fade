@@ -23,7 +23,8 @@
         24.01.2013 11:03  changed library name to slight_FaderLin
         25.01.2014 15:46  added printState function
         09.03.2014 19:51  changed callback system to pInstance system.
-        15.05.2014 16:06  added option to specify current and target values outside of library (save ram)
+        15.05.2014 16:06  added option to specify current and target values
+outside of library (save ram)
 
     TO DO:
         ~ test new added pointers.
@@ -35,7 +36,8 @@
     CC BY SA
         This work is licensed under the
         Creative Commons Attribution-ShareAlike 3.0 Unported License.
-        To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/3.0/.
+        To view a copy of this license, visit
+http://creativecommons.org/licenses/by-sa/3.0/.
 
     Apache License Version 2.0
         Copyright 2021 Stefan Krueger
@@ -53,21 +55,20 @@
         limitations under the License.
 
     The MIT License (MIT)
-        Permission is hereby granted, free of charge, to any person obtaining a copy
-        of this software and associated documentation files (the "Software"),
-        to deal in the Software without restriction, including without limitation
-        the rights to use, copy, modify, merge, publish, distribute, sublicense,
-        and/or sell copies of the Software, and to permit persons to whom the Software
-        is furnished to do so, subject to the following conditions:
-        The above copyright notice and this permission notice shall be included in all
-        copies or substantial portions of the Software.
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-        INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-        PARTICULAR PURPOSE AND NONINFRINGEMENT.
-        IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
-        OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-        http://opensource.org/licenses/mit-license.php
+        Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions: The above copyright notice and
+this permission notice shall be included in all copies or substantial portions
+of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. http://opensource.org/licenses/mit-license.php
 
 *******************************************/
 
@@ -76,7 +77,6 @@
     Replace with:    Serial.print\1(F("\2"));
 **/
 
-
 // #define debug_slight_FaderLin
 
 // include own headerfile
@@ -84,20 +84,18 @@
 #include "./slight_FaderLin.h"
 // use "" for files in same directory as .ino
 
-
 // ******************************************
 // Constructor
 // ******************************************
 
 /** Constructor **/
-// initialize chChannelCount http://forum.arduino.cc/index.php?topic=188261.msg1393390#msg1393390
+// initialize chChannelCount
+// http://forum.arduino.cc/index.php?topic=188261.msg1393390#msg1393390
 slight_FaderLin::slight_FaderLin(
     uint8_t kID_New, uint8_t channelCount_New,
     tCallbackFunctionValuesChanged callbackValuesChanged_new,
-    tCallbackFunction callbackOnEvent_new,
-    uint16_t *values_Current_new,
-    uint16_t *values_Target_new 
-    )
+    tCallbackFunction callbackOnEvent_new, uint16_t *values_Current_new,
+    uint16_t *values_Target_new)
     : kID(kID_New), channelCount(channelCount_New),
       callbackValuesChanged(callbackValuesChanged_new),
       callbackOnEvent(callbackOnEvent_new)
@@ -112,12 +110,14 @@ slight_FaderLin::slight_FaderLin(
         as though it was an array (since it is), just like you are now doing.
 
         Would you be so kind as to explain what the line does?
-        Sure. The malloc function allocates uint8_ts of memory, and returns a pointer to that memory.
-        The type that it returns is void *, so it almost always needs to be cast to the correct type.
-        In your case, the reinterpret_cast<uint16_t *>(xxx) cast is doing just that.
-        Inside the parentheses, you need to define how many uint8_ts to allocate.
-        The number of uint8_ts is defined by the number of elements that the pointer
-        points to (numRings) times the number of uint8_ts in each element (sizeof(uint16_t)).
+        Sure. The malloc function allocates uint8_ts of memory, and returns a
+       pointer to that memory. The type that it returns is void *, so it almost
+       always needs to be cast to the correct type. In your case, the
+       reinterpret_cast<uint16_t *>(xxx) cast is doing just that. Inside the
+       parentheses, you need to define how many uint8_ts to allocate. The number
+       of uint8_ts is defined by the number of elements that the pointer points
+       to (numRings) times the number of uint8_ts in each element
+       (sizeof(uint16_t)).
     */
 
     if (values_Current_new) {
@@ -134,15 +134,14 @@ slight_FaderLin::slight_FaderLin(
             malloc(sizeof(uint16_t) * channelCount));
     }
 
-
-    values_Source = reinterpret_cast<uint16_t *>(
-        malloc(sizeof(uint16_t) * channelCount));
-    values_Current = reinterpret_cast<uint16_t *>(
-        malloc(sizeof(uint16_t) * channelCount));
-    values_Dif = reinterpret_cast<uint16_t *>(
-        malloc(sizeof(uint16_t) * channelCount));
-    values_DifIsNegativ = reinterpret_cast<bool *>(
-        malloc(sizeof(bool)  * channelCount));
+    values_Source =
+        reinterpret_cast<uint16_t *>(malloc(sizeof(uint16_t) * channelCount));
+    values_Current =
+        reinterpret_cast<uint16_t *>(malloc(sizeof(uint16_t) * channelCount));
+    values_Dif =
+        reinterpret_cast<uint16_t *>(malloc(sizeof(uint16_t) * channelCount));
+    values_DifIsNegativ =
+        reinterpret_cast<bool *>(malloc(sizeof(bool) * channelCount));
 
     /* //single channel version:
     wValues_Source = 0;
@@ -159,22 +158,24 @@ slight_FaderLin::slight_FaderLin(
 
 /** Destructor **/
 slight_FaderLin::~slight_FaderLin() {
-  //
+    //
 }
 
 /** Begin (activate object/instantce) **/
 void slight_FaderLin::begin() {
     if (ready == false) {
-        #ifdef debug_slight_FaderLin
-            // NOLINTNEXTLINE(whitespace/line_length)
-            Serial.println(F("*******************************************************************"));
-            // NOLINTNEXTLINE(whitespace/line_length)
-            Serial.println(F("** Welcome to slight_FaderLin World - Library will initialise... **"));
-            // NOLINTNEXTLINE(whitespace/line_length)
-            Serial.println(F("*******************************************************************"));
-            Serial.println(F("slight_FaderLin::begin: "));
-        #endif
-
+#ifdef debug_slight_FaderLin
+        // NOLINTNEXTLINE(whitespace/line_length)
+        Serial.println(F("*****************************************************"
+                         "**************"));
+        // NOLINTNEXTLINE(whitespace/line_length)
+        Serial.println(F("** Welcome to slight_FaderLin World - Library will "
+                         "initialise... **"));
+        // NOLINTNEXTLINE(whitespace/line_length)
+        Serial.println(F("*****************************************************"
+                         "**************"));
+        Serial.println(F("slight_FaderLin::begin: "));
+#endif
 
         // / -----------------------------------------
         // ??
@@ -195,18 +196,13 @@ void slight_FaderLin::begin() {
         // wValues_Current = 0;
         // wValues_Dif = 0;
 
-
         state = state_Standby;
 
         ready = true;
     }
 }
 
-bool slight_FaderLin::isReady() {
-    return ready;
-}
-
-
+bool slight_FaderLin::isReady() { return ready; }
 
 // ******************************************
 // functions
@@ -230,7 +226,6 @@ bool slight_FaderLin::isReady() {
 //         Serial.print(array[ch_index]);
 //     }
 // }
-
 
 void slight_FaderLin::printArray(uint16_t *array) {
     Serial.print(F(" "));
@@ -262,7 +257,135 @@ void slight_FaderLin::printuint8_tAlignRight(uint8_t bValue) {
 // / -----------------------------------------
 //  Calc steps
 // ------------------------------------------
+bool slight_FaderLin::calculate_value(uint32_t ulDurationTemp,
+                                      uint8_t ch_index) {
+    bool bFlag_NewValues = 0;
+#ifdef debug_slight_FaderLin
+    Serial.print(F("u"));
+    Serial.print(ch_index + 10);
+    Serial.print(F(".1:target:"));
+    printArray(values_Target);
+    Serial.println();
+#endif
 
+    word wValueTemp = ((values_Dif[ch_index] * ulDurationTemp) / fadeDuration);
+#ifdef debug_slight_FaderLin
+    Serial.print(F("wValueTemp: "));
+    Serial.print(wValueTemp);
+    Serial.println();
+#endif
+
+    // calc result value
+    word wValue_NewCurrent = 0;
+    if (values_DifIsNegativ[ch_index]) {
+        wValue_NewCurrent = values_Source[ch_index] - wValueTemp;
+    } else {
+        wValue_NewCurrent = values_Source[ch_index] + wValueTemp;
+    }
+
+#ifdef debug_slight_FaderLin
+    Serial.print(F("u"));
+    Serial.print(ch_index + 10);
+    Serial.print(F(".2:target:"));
+    printArray(values_Target);
+    Serial.println();
+#endif
+
+    // check if there is a new value
+    if (wValue_NewCurrent != values_Current[ch_index]) {
+        values_Current[ch_index] = wValue_NewCurrent;
+        // set flag that there are new values..
+        bFlag_NewValues = 1;
+    }
+
+#ifdef debug_slight_FaderLin
+    Serial.print(F("u"));
+    Serial.print(ch_index + 10);
+    Serial.print(F(".3:target:"));
+    printArray(values_Target);
+    Serial.println();
+#endif
+    return bFlag_NewValues;
+}
+
+bool slight_FaderLin::calculate_values(uint32_t ulDurationTemp) {
+
+    /* ulDurations steht im Verhältniss zum aktuellen wert!
+        gesammt dauer zu gesamt werte differenz    =    vergangene dauer zu
+       aktueller wert aktueller wert = x x = (Werte Dif * vergangene dauer)
+       / gesamt dauer;
+
+        ulRatio = vergangene dauer / gesamt dauer;
+        X = WertDif * ulRatio;
+            // calc Ratio
+            //unsigned long ulRatio = (ulDurationTemp / fadeDuration);
+        --> Geht nicht! da Ratio < 1 ist....
+        use: ((wValues_Dif * ulDurationTemp) / fadeDuration)
+    */
+
+    #ifdef debug_slight_FaderLin
+        Serial.print(F("u 2.0:target:"));
+        printArray(values_Target);
+        Serial.println();
+#endif
+
+    bool bFlag_NewValues = 0;
+
+    // for every channel calc value
+    for (uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
+        // or assignment - this way we change only if new values..
+        bFlag_NewValues |= calculate_value(ulDurationTemp, ch_index);
+    } // for loop
+
+    if (bFlag_NewValues) {
+        // call cbfunc for updating output values.
+        callbackValuesChanged(this, values_Current, channelCount);
+        // callbackValuesChanged(this);
+    }
+
+#ifdef debug_slight_FaderLin
+    Serial.print(F("u22.0:target:"));
+    printArray(values_Target);
+    Serial.println();
+#endif
+
+#ifdef debug_slight_FaderLin
+    Serial.print(F("values_Current: "));
+    printArray(values_Current);
+    Serial.println();
+#endif
+
+    /* old
+    // single channel version:
+        word wValueTemp = ((wValues_Dif * ulDurationTemp) / fadeDuration);
+        #ifdef debug_slight_FaderLin
+            Serial.print(F("wValueTemp: "));
+            Serial.print(wValueTemp);
+            Serial.println();
+        #endif
+        word wValue_NewCurrent = 0;
+        if (bValues_DifIsNegativ) {
+            //wValue_NewCurrent = ((wValues_Dif * ulDurationTemp) /
+    fadeDuration) - wValues_Source; wValue_NewCurrent = wValues_Source -
+    wValueTemp; } else { wValue_NewCurrent = wValues_Source + wValueTemp;
+        }
+        // check if there is a new value
+        if ( wValue_NewCurrent != wValues_Current ) {
+            wValues_Current = wValue_NewCurrent;
+            // set changes to 1
+            state = state_Fading_newValues;
+        } else {
+            // no new values..
+            state = state_Fading;
+        }
+        #ifdef debug_slight_FaderLin
+            Serial.print(F("wValues_Current: "));
+            Serial.print(wValues_Current);
+            Serial.println();
+        #endif
+    */
+    return bFlag_NewValues;
+}
 
 // returns state of Fading system.
 uint8_t slight_FaderLin::update() {
@@ -276,166 +399,46 @@ uint8_t slight_FaderLin::update() {
     if (ready == true) {
         // if fading is active calc steps
         if (Active) {
-            #ifdef debug_slight_FaderLin
-                Serial.print(F("u 1.0:target:"));
-                printArray(values_Target);
-                Serial.println();
-            #endif
+#ifdef debug_slight_FaderLin
+            Serial.print(F("u 1.0:target:"));
+            printArray(values_Target);
+            Serial.println();
+#endif
 
             // calc duration since FadeStart
             uint32_t ulDurationTemp = (millis() - timestamp_FadeStart);
-            #ifdef debug_slight_FaderLin
-                /**/
-                Serial.print(F("ulDurationTemp: "));
-                Serial.print(ulDurationTemp);
-                Serial.println();
-                /**/
-            #endif
+#ifdef debug_slight_FaderLin
+            /**/
+            Serial.print(F("ulDurationTemp: "));
+            Serial.print(ulDurationTemp);
+            Serial.println();
+            /**/
+#endif
             // if ulDuration < fadeDuration
             if (ulDurationTemp < fadeDuration) {
                 // set state to 'Fading';
                 stateTemp = state_Fading;
-
-                /* ulDurations steht im Verhältniss zum aktuellen wert!
-                    gesammt dauer zu gesamt werte differenz    =    vergangene dauer zu aktueller wert
-                    aktueller wert = x
-                    x = (Werte Dif * vergangene dauer) / gesamt dauer;
-
-                    ulRatio = vergangene dauer / gesamt dauer;
-                    X = WertDif * ulRatio;
-                        // calc Ratio
-                        //unsigned long ulRatio = (ulDurationTemp / fadeDuration);
-                    --> Geht nicht! da Ratio < 1 ist....
-                    use: ((wValues_Dif * ulDurationTemp) / fadeDuration)
-                */
-
-
-                #ifdef debug_slight_FaderLin
-                    Serial.print(F("u 2.0:target:"));
-                    printArray(values_Target);
-                    Serial.println();
-                #endif
-
-                bool bFlag_NewValues = 0;
-
-                // for every channel calc value
-                for (uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
-                    #ifdef debug_slight_FaderLin
-                        Serial.print(F("u"));
-                        Serial.print(ch_index+10);
-                        Serial.print(F(".1:target:"));
-                        printArray(values_Target);
-                        Serial.println();
-                    #endif
-
-                    word wValueTemp =
-                        ((values_Dif[ch_index] * ulDurationTemp) / fadeDuration);
-                    #ifdef debug_slight_FaderLin
-                        Serial.print(F("wValueTemp: "));
-                        Serial.print(wValueTemp);
-                        Serial.println();
-                    #endif
-
-                    // calc result value
-                    word wValue_NewCurrent = 0;
-                    if (values_DifIsNegativ[ch_index]) {
-                        wValue_NewCurrent = values_Source[ch_index] - wValueTemp;
-                    } else {
-                        wValue_NewCurrent = values_Source[ch_index] + wValueTemp;
-                    }
-
-                    #ifdef debug_slight_FaderLin
-                        Serial.print(F("u"));
-                        Serial.print(ch_index+10);
-                        Serial.print(F(".2:target:"));
-                        printArray(values_Target);
-                        Serial.println();
-                    #endif
-
-                    // check if there is a new value
-                    if ( wValue_NewCurrent != values_Current[ch_index] ) {
-                        values_Current[ch_index] = wValue_NewCurrent;
-                        // set flag that there are new values..
-                        bFlag_NewValues = 1;
-                    }
-
-                    #ifdef debug_slight_FaderLin
-                        Serial.print(F("u"));
-                        Serial.print(ch_index+10);
-                        Serial.print(F(".3:target:"));
-                        printArray(values_Target);
-                        Serial.println();
-                    #endif
-                }  // for loop
-
-                if (bFlag_NewValues) {
-                    // call cbfunc for updating output values.
-                    callbackValuesChanged(this, values_Current, channelCount);
-                    // callbackValuesChanged(this);
-                }
-
-                #ifdef debug_slight_FaderLin
-                    Serial.print(F("u22.0:target:"));
-                    printArray(values_Target);
-                    Serial.println();
-                #endif
-
-                #ifdef debug_slight_FaderLin
-                    Serial.print(F("values_Current: "));
-                    printArray(values_Current);
-                    Serial.println();
-                #endif
-
-                /* old
-                // single channel version:
-                    word wValueTemp = ((wValues_Dif * ulDurationTemp) / fadeDuration);
-                    #ifdef debug_slight_FaderLin
-                        Serial.print(F("wValueTemp: "));
-                        Serial.print(wValueTemp);
-                        Serial.println();
-                    #endif
-                    word wValue_NewCurrent = 0;
-                    if (bValues_DifIsNegativ) {
-                        //wValue_NewCurrent = ((wValues_Dif * ulDurationTemp) / fadeDuration) - wValues_Source;
-                        wValue_NewCurrent = wValues_Source - wValueTemp;
-                    } else {
-                        wValue_NewCurrent = wValues_Source + wValueTemp;
-                    }
-                    // check if there is a new value
-                    if ( wValue_NewCurrent != wValues_Current ) {
-                        wValues_Current = wValue_NewCurrent;
-                        // set changes to 1
-                        state = state_Fading_newValues;
-                    } else {
-                        // no new values..
-                        state = state_Fading;
-                    }
-                    #ifdef debug_slight_FaderLin
-                        Serial.print(F("wValues_Current: "));
-                        Serial.print(wValues_Current);
-                        Serial.println();
-                    #endif
-                */
+                calculate_values(ulDurationTemp);
 
             } else {
-                // set values to Target. Time is Over!!
-                #ifdef debug_slight_FaderLin
-                    Serial.println(F("Target Time is Over... Fade is Finished!"));
-                #endif
+// set values to Target. Time is Over!!
+#ifdef debug_slight_FaderLin
+                Serial.println(F("Target Time is Over... Fade is Finished!"));
+#endif
 
-                #ifdef debug_slight_FaderLin
-                    Serial.print(F("ff:target:"));
-                    printArray(values_Target);
-                    Serial.println();
-                    Serial.println(F("ff:setcurrent2target"));
-                #endif
-
+#ifdef debug_slight_FaderLin
+                Serial.print(F("ff:target:"));
+                printArray(values_Target);
+                Serial.println();
+                Serial.println(F("ff:setcurrent2target"));
+#endif
 
                 // this do not work.
                 // it just sets the pointer to the same memeory location...
                 //    values_Current = values_Target;
                 // use this:
-                for (uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
+                for (uint8_t ch_index = 0; ch_index < channelCount;
+                     ch_index++) {
                     // set end Values
                     values_Current[ch_index] = values_Target[ch_index];
                 }
@@ -444,21 +447,21 @@ uint8_t slight_FaderLin::update() {
                 callbackValuesChanged(this, values_Current, channelCount);
                 // callbackValuesChanged(this);
 
-                #ifdef debug_slight_FaderLin
-                    Serial.print(F("ff:target:"));
-                    printArray(values_Target);
-                    Serial.println();
-                    Serial.print(F("ff:current:"));
-                    printArray(values_Current);
-                    Serial.println();
-                #endif
+#ifdef debug_slight_FaderLin
+                Serial.print(F("ff:target:"));
+                printArray(values_Target);
+                Serial.println();
+                Serial.print(F("ff:current:"));
+                printArray(values_Current);
+                Serial.println();
+#endif
 
                 /*
-                for ( uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
-                    values_Current[ch_index] = values_Target[ch_index];
+                for ( uint8_t ch_index = 0; ch_index < channelCount; ch_index++)
+                { values_Current[ch_index] = values_Target[ch_index];
                 }*/
                 // single channel version:
-                    // wValues_Current = wValues_Target;
+                // wValues_Current = wValues_Target;
 
                 stateTemp = state_Standby;
 
@@ -477,29 +480,27 @@ uint8_t slight_FaderLin::update() {
             // call cbfunc for StateChange.
             generateEvent(event_StateChanged);
         }
-    }  // end if ready
+    } // end if ready
     return state;
 }
 
 // start new Fade
-void slight_FaderLin::startFadeTo(
-    uint32_t fadeDuration_New,
-    uint16_t *values_NewTarget
-) {
+void slight_FaderLin::startFadeTo(uint32_t fadeDuration_New,
+                                  uint16_t *values_NewTarget) {
     if (ready == true) {
-        #ifdef debug_slight_FaderLin
-            Serial.print(F("startFadeTo:  fadeDuration_New: "));
-            Serial.print(fadeDuration_New);
-            printArray(values_NewTarget);
-            Serial.println();
-        #endif
+#ifdef debug_slight_FaderLin
+        Serial.print(F("startFadeTo:  fadeDuration_New: "));
+        Serial.print(fadeDuration_New);
+        printArray(values_NewTarget);
+        Serial.println();
+#endif
 
         // Stop Fading
-            Active = 0;
+        Active = 0;
         // reset variables.
-            flagFadingFinished = 1;
+        flagFadingFinished = 1;
 
-        if ( (flagFadingFinished) ) {
+        if ((flagFadingFinished)) {
             // set Source and Target values
             for (uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
                 // set Source values
@@ -518,31 +519,28 @@ void slight_FaderLin::startFadeTo(
                 }
             }
 
+#ifdef debug_slight_FaderLin
+            Serial.print(F("fstart:target  :"));
+            printArray(values_Target);
+            Serial.println();
+#endif
+#ifdef debug_slight_FaderLin
+            Serial.print(F("values_Source: "));
+            printArray(values_Source);
+            Serial.println();
 
-            #ifdef debug_slight_FaderLin
-                Serial.print(F("fstart:target  :"));
-                printArray(values_Target);
-                Serial.println();
-            #endif
-            #ifdef debug_slight_FaderLin
-                Serial.print(F("values_Source: "));
-                printArray(values_Source);
-                Serial.println();
+            Serial.print(F("values_Target: "));
+            printArray(values_Target);
+            Serial.println();
 
-                Serial.print(F("values_Target: "));
-                printArray(values_Target);
-                Serial.println();
-
-                Serial.print(F("values_Dif   : "));
-                printArray(values_Dif);
-                Serial.println();
-                /* bool is not supported jet..
-                Serial.print(F("values_DifIsNegativ: "));
-                printArray(values_DifIsNegativ);
-                Serial.println();*/
-            #endif
-
-
+            Serial.print(F("values_Dif   : "));
+            printArray(values_Dif);
+            Serial.println();
+            /* bool is not supported jet..
+            Serial.print(F("values_DifIsNegativ: "));
+            printArray(values_DifIsNegativ);
+            Serial.println();*/
+#endif
 
             /*
             // single channel version
@@ -574,34 +572,32 @@ void slight_FaderLin::startFadeTo(
             timestamp_FadeStart = millis();
             // set Duration
             fadeDuration = fadeDuration_New;
-            #ifdef debug_slight_FaderLin
-                Serial.print(F("fadeDuration: "));
-                Serial.print(fadeDuration);
-                Serial.println();
-            #endif
+#ifdef debug_slight_FaderLin
+            Serial.print(F("fadeDuration: "));
+            Serial.print(fadeDuration);
+            Serial.println();
+#endif
             // start system
             flagFadingFinished = 0;
             Active = 1;
-            #ifdef debug_slight_FaderLin
-                Serial.print(F("for   update:target:"));
-                printArray(values_Target);
-                Serial.println();
-            #endif
+#ifdef debug_slight_FaderLin
+            Serial.print(F("for   update:target:"));
+            printArray(values_Target);
+            Serial.println();
+#endif
             // just do the first calculation immediately
             update();
-            #ifdef debug_slight_FaderLin
-                Serial.print(F("after update:target:"));
-                printArray(values_Target);
-                Serial.println();
-            #endif
+#ifdef debug_slight_FaderLin
+            Serial.print(F("after update:target:"));
+            printArray(values_Target);
+            Serial.println();
+#endif
         }
     }
 }
 
-void slight_FaderLin::startFadeTo(
-    uint32_t fadeDuration_New,
-    uint16_t value_NewTarget
-) {
+void slight_FaderLin::startFadeTo(uint32_t fadeDuration_New,
+                                  uint16_t value_NewTarget) {
     if (ready == true) {
         uint16_t temp_array[channelCount];
         for (size_t i = 0; i < channelCount; i++) {
@@ -611,11 +607,10 @@ void slight_FaderLin::startFadeTo(
     }
 }
 
-
 void slight_FaderLin::stopFade() {
     if (ready == true) {
         // if fading is active in some way or not finished yet
-        if ( (!flagFadingFinished) || (Active) ) {
+        if ((!flagFadingFinished) || (Active)) {
             // Stop Fading
             Active = 0;
             // reset variables.
@@ -631,65 +626,56 @@ uint16_t *slight_FaderLin::getCurrentValues() {
     return values_Current;
 }*/
 
+uint8_t slight_FaderLin::getID() { return kID; }
 
-
-uint8_t slight_FaderLin::getID() {
-    return kID;
-}
-
-uint8_t slight_FaderLin::getState() {
-    return state;
-}
+uint8_t slight_FaderLin::getState() { return state; }
 
 uint8_t slight_FaderLin::printState(Print &out) {
     switch (state) {
-        case slight_FaderLin::state_Standby : {
-                out.print(F("standby"));
-            } break;
-        case slight_FaderLin::state_NotValid : {
-                out.print(F("NotValid"));
-            } break;
-        case slight_FaderLin::state_Fading : {
-                out.print(F("fading"));
-            } break;
-        default: {
-                out.print(F("error: '"));
-                out.print(state);
-                out.print(F(" ' is not a know state."));
-            }
-    }  // end switch
+    case slight_FaderLin::state_Standby: {
+        out.print(F("standby"));
+    } break;
+    case slight_FaderLin::state_NotValid: {
+        out.print(F("NotValid"));
+    } break;
+    case slight_FaderLin::state_Fading: {
+        out.print(F("fading"));
+    } break;
+    default: {
+        out.print(F("error: '"));
+        out.print(state);
+        out.print(F(" ' is not a know state."));
+    }
+    } // end switch
     return state;
 }
 
-
-uint8_t slight_FaderLin::getEventLast() {
-    return eventLast;
-}
+uint8_t slight_FaderLin::getEventLast() { return eventLast; }
 
 uint8_t slight_FaderLin::printEvent(Print &out, uint8_t eventTemp) {
     switch (eventTemp) {
-        case slight_FaderLin::event_NoEvent : {
-            out.print(F("no event"));
-        } break;
+    case slight_FaderLin::event_NoEvent: {
+        out.print(F("no event"));
+    } break;
 
-        case slight_FaderLin::event_StateChanged : {
-            out.print(F("state changed"));
-        } break;
+    case slight_FaderLin::event_StateChanged: {
+        out.print(F("state changed"));
+    } break;
 
-        // fading
-        case slight_FaderLin::event_fading_Finished: {
-            out.print(F("fading finished"));
-        } break;
-        case slight_FaderLin::event_fading_Stopped: {
-            out.print(F("fading stoped"));
-        } break;
+    // fading
+    case slight_FaderLin::event_fading_Finished: {
+        out.print(F("fading finished"));
+    } break;
+    case slight_FaderLin::event_fading_Stopped: {
+        out.print(F("fading stoped"));
+    } break;
 
-        default: {
-            out.print(F("error: '"));
-            out.print(state);
-            out.print(F(" ' is not a know event."));
-        }
-    }  // end switch
+    default: {
+        out.print(F("error: '"));
+        out.print(state);
+        out.print(F(" ' is not a know event."));
+    }
+    } // end switch
     return state;
 }
 
@@ -697,7 +683,6 @@ uint8_t slight_FaderLin::printEventLast(Print &out) {
     printEvent(out, eventLast);
     return eventLast;
 }
-
 
 void slight_FaderLin::generateEvent(uint8_t eventNew) {
     event = eventNew;
@@ -709,20 +694,15 @@ void slight_FaderLin::generateEvent(uint8_t eventNew) {
     event = event_NoEvent;
 }
 
+uint8_t slight_FaderLin::getChannelCount() { return channelCount; }
 
-
-uint8_t slight_FaderLin::getChannelCount() {
-    return channelCount;
-}
-
-
-void slight_FaderLin::getCurrentValues(uint16_t * pToArray) {
+void slight_FaderLin::getCurrentValues(uint16_t *pToArray) {
     /*Serial.print(F("values_Current[0]: "));
     Serial.println(values_Current[0]);
     for (uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
         pToArray[ch_index] = values_Current[ch_index];
     }*/
-    memcpy(pToArray, values_Current, channelCount*sizeof(word));
+    memcpy(pToArray, values_Current, channelCount * sizeof(word));
     /*Serial.print(F("pToArray[0]: "));
     Serial.println(pToArray[0]);*/
 }

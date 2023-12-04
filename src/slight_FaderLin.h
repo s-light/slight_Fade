@@ -213,6 +213,10 @@ private:
     uint16_t *values_Dif;
     bool *values_DifIsNegativ;
 
+    bool calculate_value(uint32_t ulDurationTemp,
+                                          uint8_t ch_index);
+    bool calculate_values(uint32_t ulDurationTemp);
+
 // for testing --> SingleChannel Version
 /*
 uint16_t values_Source;
@@ -228,7 +232,7 @@ bool bValues_DifIsNegativ;
 #endif
 
     void generateEvent(uint8_t eventNew);
-};
+    };
 
 #endif // ifndef slight_FaderLin_h
 
