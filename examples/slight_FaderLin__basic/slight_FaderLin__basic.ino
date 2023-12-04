@@ -50,37 +50,39 @@ https://opensource.org/licenses/mit-license.php
 byte led_1_pin = LED_BUILTIN;
 byte led_2_pin = 9;
 
-void myFaderOne_callback_OutputChanged(byte id, uint16_t *values, byte count) {
-    // we use the fader id as pin number...
-    analogWrite(id, values[0]);
+
+void myCallback_ValuesChanged(slight_FaderLin *pInstance,
+                                       uint16_t *values, byte count) {
+    uint8_t pin = pInstance->getID();
+    // uint8_t pin = (*instance).getID();
+    analogWrite(pin, values[0]);
 }
 
-void myCallback_onEvent(slight_FaderLin *instance, byte event) {
+void myCallback_onEvent(slight_FaderLin *instance) {
     // react on events:
-    switch (event) {
-        case slight_FaderLin::event_fading_Finished : {
-            Serial.print(F("led on pin "));
-            Serial.print((*instance).getID());
-            Serial.print(F(": fading Finished."));
-            Serial.println();
+    switch (instance->getEventLast()) {
+    case slight_FaderLin::event_fading_Finished: {
+        Serial.print(F("led on pin "));
+        Serial.print((*instance).getID());
+        Serial.print(F(": fading Finished."));
+        Serial.println();
         } break;
-    } //end switch
+        } // end switch
 }
 
+slight_FaderLin myFader1 =
+    slight_FaderLin(led_1_pin,                // byte kID
+                    1,                        // byte channelCount
+                    myCallback_ValuesChanged, // tCallbackFunctionValuesChanged
+                    myCallback_onEvent        // tCallbackFunction
 
-slight_FaderLin myFader1(
-    led_1_pin, // byte kID_New
-    1, // byte kChannelCount_New
-    myFaderOne_callback_OutputChanged, // tCbfuncValuesChanged cbfuncValuesChanged_New
-    myCallback_onEvent // tCbfuncStateChanged cbfuncStateChanged_New
-);
+    );
 slight_FaderLin myFader2(
-    led_2_pin, // byte kID_New
-    1, // byte kChannelCount_New
-    myFaderOne_callback_OutputChanged, // tCbfuncValuesChanged cbfuncValuesChanged_New
-    myCallback_onEvent // tCbfuncStateChanged cbfuncStateChanged_New
+    led_2_pin,                         // byte kID
+    1,                                 // byte channelCount
+    myCallback_ValuesChanged, // tCallbackFunctionValuesChanged
+    myCallback_onEvent                 // tCallbackFunction
 );
-
 
 void handle_serial_input() {
     if (Serial.available() > 0) {
@@ -105,7 +107,7 @@ void handle_serial_input() {
                 Serial.println("start fade 1 half");
                 uint32_t duration = 1000; //ms
                 uint16_t target_value = 100;
-                myFaderOne.startFadeTo(duration, target_value);
+                myFader1.startFadeTo(duration, target_value);
             } break;
             case '2': {
                 Serial.println("start fade 2 on");

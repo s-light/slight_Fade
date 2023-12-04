@@ -49,11 +49,12 @@ https://opensource.org/licenses/mit-license.php
 
 byte led_1_pin = LED_BUILTIN;
 
-void myFaderOne_callback_OutputChanged(byte id, uint16_t *values, byte count) {
+void myFaderOne_callback_ValuesChanged(slight_FaderLin *pInstance,
+                                       uint16_t *values, byte count) {
     analogWrite(led_1_pin, values[0]);
 }
 
-void myCallback_onEvent(slight_FaderLin *pInstance, byte event) {
+void myCallback_onEvent(slight_FaderLin *pInstance) {
     // we do not use this..
     1;
 }
@@ -61,9 +62,9 @@ void myCallback_onEvent(slight_FaderLin *pInstance, byte event) {
 
 slight_FaderLin myFaderOne(
     0, // byte kID_New
-    1, // byte kChannelCount_New
-    myFaderOne_callback_OutputChanged, // tCbfuncValuesChanged cbfuncValuesChanged_New
-    myCallback_onEvent // tCbfuncStateChanged cbfuncStateChanged_New
+    1, // byte channelCount_New
+    myFaderOne_callback_ValuesChanged, // tCallbackFunctionValuesChanged
+    myCallback_onEvent // tCbfuncStateChanged
 );
 
 

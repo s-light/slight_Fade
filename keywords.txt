@@ -10,8 +10,8 @@
 tCallbackFunction	KEYWORD1
 
 tCbfuncStateChanged	KEYWORD1
-tcbfOnEvent	KEYWORD1
-tCbfuncValuesChanged	KEYWORD1
+tCallbackFunction	KEYWORD1
+tCallbackFunctionValuesChanged	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)

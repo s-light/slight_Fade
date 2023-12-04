@@ -91,25 +91,15 @@
 
 /** Constructor **/
 // initialize chChannelCount http://forum.arduino.cc/index.php?topic=188261.msg1393390#msg1393390
-// NOLINTNEXTLINE(whitespace/line_length)
-//  slight_FaderLin::slight_FaderLin(uint8_t kChannelCount_Temp) : kChannelCount ( kChannelCount_Temp ) {
-// NOLINTNEXTLINE(whitespace/line_length)
-//  slight_FaderLin::slight_FaderLin(uint8_t kChannelCount_Temp, tCbfuncValuesChanged cbfuncValuesChanged_Temp) : kChannelCount ( kChannelCount_Temp ), cbfuncValuesChanged (cbfuncValuesChanged_Temp){
-// NOLINTNEXTLINE(whitespace/line_length)
-//  slight_FaderLin::slight_FaderLin(uint8_t kChannelCount_Temp, tCbfuncValuesChanged cbfuncValuesChanged_Temp, tCbfuncStateChanged cbfuncStateChanged_Temp)
 slight_FaderLin::slight_FaderLin(
-    uint8_t kID_New,
-    uint8_t kChannelCount_New,
-    tCbfuncValuesChanged cbfuncValuesChanged_New,
-    tcbfOnEvent cbfCallbackOnEvent_New,
-    uint16_t *values_Current_new,
-    uint16_t *values_Target_new
-) :
-    kID(kID_New),
-    kChannelCount(kChannelCount_New),
-    cbfuncValuesChanged(cbfuncValuesChanged_New),
-    cbfCallbackOnEvent(cbfCallbackOnEvent_New)
-    // NOLINTNEXTLINE(whitespace/braces)
+    uint8_t kID_New, uint8_t channelCount_New,
+    tCallbackFunctionValuesChanged callbackValuesChanged_new,
+    tCallbackFunction callbackOnEvent_new, uint16_t *values_Current_new,
+    uint16_t *values_Target_new )
+    : kID(kID_New), channelCount(channelCount_New),
+      callbackValuesChanged(callbackValuesChanged_new),
+      callbackOnEvent(callbackOnEvent_new)
+// NOLINTNEXTLINE(whitespace/braces)
 {
     // do some internal inits
 
@@ -132,25 +122,25 @@ slight_FaderLin::slight_FaderLin(
         values_Current = values_Current_new;
     } else {
         values_Current = reinterpret_cast<uint16_t *>(
-            malloc(sizeof(uint16_t) * kChannelCount));
+            malloc(sizeof(uint16_t) * channelCount));
     }
 
     if (values_Target_new) {
         values_Target = values_Target_new;
     } else {
         values_Target = reinterpret_cast<uint16_t *>(
-            malloc(sizeof(uint16_t) * kChannelCount));
+            malloc(sizeof(uint16_t) * channelCount));
     }
 
 
     values_Source = reinterpret_cast<uint16_t *>(
-        malloc(sizeof(uint16_t) * kChannelCount));
+        malloc(sizeof(uint16_t) * channelCount));
     values_Current = reinterpret_cast<uint16_t *>(
-        malloc(sizeof(uint16_t) * kChannelCount));
+        malloc(sizeof(uint16_t) * channelCount));
     values_Dif = reinterpret_cast<uint16_t *>(
-        malloc(sizeof(uint16_t) * kChannelCount));
+        malloc(sizeof(uint16_t) * channelCount));
     values_DifIsNegativ = reinterpret_cast<bool *>(
-        malloc(sizeof(bool)  * kChannelCount));
+        malloc(sizeof(bool)  * channelCount));
 
     /* //single channel version:
     wValues_Source = 0;
@@ -189,7 +179,7 @@ void slight_FaderLin::begin() {
         // ------------------------------------------
 
         // clean up memory.
-        for (uint8_t ch_index = 0; ch_index < kChannelCount; ch_index++) {
+        for (uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
             values_Source[ch_index] = 0;
             values_Target[ch_index] = 0;
             values_Current[ch_index] = 0;
@@ -228,7 +218,7 @@ bool slight_FaderLin::isReady() {
 
 // void slight_FaderLin::printArray(uint16_t *array) {
 //     Serial.print(F(" "));
-//     uint8_t bCount = kChannelCount; // (sizeof(*&array) / sizeof(uint16_t))
+//     uint8_t bCount = channelCount; // (sizeof(*&array) / sizeof(uint16_t))
 //     //Serial.print(F(" Count: "));
 //     //Serial.print(bCount);
 //     for(uint8_t ch_index = 0; ch_index < bCount; ch_index++){
@@ -242,7 +232,7 @@ bool slight_FaderLin::isReady() {
 
 void slight_FaderLin::printArray(uint16_t *array) {
     Serial.print(F(" "));
-    uint8_t bCount = kChannelCount;
+    uint8_t bCount = channelCount;
     uint8_t ch_index = 0;
     printuint8_tAlignRight(array[ch_index]);
     for (ch_index = 1; ch_index < bCount; ch_index++) {
@@ -327,7 +317,7 @@ uint8_t slight_FaderLin::update() {
                 bool bFlag_NewValues = 0;
 
                 // for every channel calc value
-                for (uint8_t ch_index = 0; ch_index < kChannelCount; ch_index++) {
+                for (uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
                     #ifdef debug_slight_FaderLin
                         Serial.print(F("u"));
                         Serial.print(ch_index+10);
@@ -378,7 +368,7 @@ uint8_t slight_FaderLin::update() {
 
                 if (bFlag_NewValues) {
                     // call cbfunc for updating output values.
-                    cbfuncValuesChanged(kID, values_Current, kChannelCount);
+                    callbackValuesChanged(this, values_Current, channelCount);
                 }
 
                 #ifdef debug_slight_FaderLin
@@ -442,13 +432,13 @@ uint8_t slight_FaderLin::update() {
                 // it just sets the pointer to the same memeory location...
                 //    values_Current = values_Target;
                 // use this:
-                for (uint8_t ch_index = 0; ch_index < kChannelCount; ch_index++) {
+                for (uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
                     // set end Values
                     values_Current[ch_index] = values_Target[ch_index];
                 }
 
                 // call cbfunc for updating output values.
-                cbfuncValuesChanged(kID, values_Current, kChannelCount);
+                callbackValuesChanged(this, values_Current, channelCount);
 
                 #ifdef debug_slight_FaderLin
                     Serial.print(F("ff:target:"));
@@ -460,7 +450,7 @@ uint8_t slight_FaderLin::update() {
                 #endif
 
                 /*
-                for ( uint8_t ch_index = 0; ch_index < kChannelCount; ch_index++) {
+                for ( uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
                     values_Current[ch_index] = values_Target[ch_index];
                 }*/
                 // single channel version:
@@ -507,7 +497,7 @@ void slight_FaderLin::startFadeTo(
 
         if ( (flagFadingFinished) ) {
             // set Source and Target values
-            for (uint8_t ch_index = 0; ch_index < kChannelCount; ch_index++) {
+            for (uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
                 // set Source values
                 values_Source[ch_index] = values_Current[ch_index];
                 // set Target Values
@@ -609,8 +599,8 @@ void slight_FaderLin::startFadeTo(
     uint16_t value_NewTarget
 ) {
     if (ready == true) {
-        uint16_t temp_array[kChannelCount];
-        for (size_t i = 0; i < kChannelCount; i++) {
+        uint16_t temp_array[channelCount];
+        for (size_t i = 0; i < channelCount; i++) {
             temp_array[i] = value_NewTarget;
         }
         startFadeTo(fadeDuration_New, temp_array);
@@ -707,28 +697,28 @@ uint8_t slight_FaderLin::printEventLast(Print &out) {
 
 void slight_FaderLin::generateEvent(uint8_t eventNew) {
     event = eventNew;
+    eventLast = event;
     // call event
     if (event != event_NoEvent) {
-        cbfCallbackOnEvent(this, event);
+        callbackOnEvent(this);
     }
-    eventLast = event;
     event = event_NoEvent;
 }
 
 
 
 uint8_t slight_FaderLin::getChannelCount() {
-    return kChannelCount;
+    return channelCount;
 }
 
 
 void slight_FaderLin::getCurrentValues(uint16_t * pToArray) {
     /*Serial.print(F("values_Current[0]: "));
     Serial.println(values_Current[0]);
-    for (uint8_t ch_index = 0; ch_index < kChannelCount; ch_index++) {
+    for (uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
         pToArray[ch_index] = values_Current[ch_index];
     }*/
-    memcpy(pToArray, values_Current, kChannelCount*sizeof(word));
+    memcpy(pToArray, values_Current, channelCount*sizeof(word));
     /*Serial.print(F("pToArray[0]: "));
     Serial.println(pToArray[0]);*/
 }

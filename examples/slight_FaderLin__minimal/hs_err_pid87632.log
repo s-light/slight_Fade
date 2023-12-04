@@ -1,0 +1,93 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGILL (0x4) at pc=0x00007fd26dc94074, pid=87632, tid=0x00007fd26e38d040
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_191-b12) (build 1.8.0_191-b12)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.191-b12 mixed mode linux-amd64 compressed oops)
+# Problematic frame:
+# C  [libc.so.6+0x94074]
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread is native thread
+
+siginfo: si_signo: 4 (SIGILL), si_code: 0 (SI_USER), sent from pid: 83412 (uid: 1000)
+
+Registers:
+RAX=0x00000000000000ca, RBX=0x00007fd26dfff6c0, RCX=0x00007fd26dc94076, RDX=0x0000000000015651
+RSP=0x00007ffeac1adb50, RBP=0x0000000000000000, RSI=0x0000000000000109, RDI=0x00007fd26dfff990
+R8 =0x0000000000000000, R9 =0x00000000ffffffff, R10=0x0000000000000000, R11=0x0000000000000246
+R12=0x0000000000015651, R13=0x00007ffeac1adc18, R14=0x00007fd26dfff990, R15=0x00007ffeac1adba0
+RIP=0x00007fd26dc94074, EFLAGS=0x0000000000000246, CSGSFS=0x002b000000000033, ERR=0x0000000000000000
+  TRAPNO=0x0000000000000000
+
+Top of Stack: (sp=0x00007ffeac1adb50)
+0x00007ffeac1adb50:   0000000000000000 0000010900000000
+0x00007ffeac1adb60:   00007fd26dfff990 0000000000000000
+0x00007ffeac1adb70:   00007fd26dfff6c0 0000000000000000
+0x00007ffeac1adb80:   0000000000000000 00007fd26dc99613
+0x00007ffeac1adb90:   0000000000000000 0000000000000000
+0x00007ffeac1adba0:   00007fd26dc994c0 00007fd26dfffce0
+0x00007ffeac1adbb0:   3233363738000000 0000000000000000
+0x00007ffeac1adbc0:   0000000000000018 ea2c5e296b683e00
+0x00007ffeac1adbd0:   00007ffeac1add30 00007ffeac1adc20
+0x00007ffeac1adbe0:   00007ffeac1adc80 00007fd26e007df0
+0x00007ffeac1adbf0:   00007ffeac1adca0 0000000000100000
+0x00007ffeac1adc00:   0000000000000006 00007fd26e00d685
+0x00007ffeac1adc10:   00007fd26dfff6c0 0000000000000000
+0x00007ffeac1adc20:   0000000000000000 0000000000000000
+0x00007ffeac1adc30:   0000000000001000 0000000000000000
+0x00007ffeac1adc40:   0000000000100000 0000000000000000
+0x00007ffeac1adc50:   0000000000000000 00007fd26dc45e80
+0x00007ffeac1adc60:   0000000000000000 00007ffeac1addc0
+0x00007ffeac1adc70:   00007ffeac1adca0 0000000001a38538
+0x00007ffeac1adc80:   00007ffeac1add20 00007fd26e009ba2
+0x00007ffeac1adc90:   00007ffeac1b295d 0000000500000001
+0x00007ffeac1adca0:   0000000000000005 0000000001a38538
+0x00007ffeac1adcb0:   0000000000000001 00007ffeac1b295d
+0x00007ffeac1adcc0:   00007fd26d2d49b0 00007fd26d2d4520
+0x00007ffeac1adcd0:   00007fd26d2d4570 0000000000000000
+0x00007ffeac1adce0:   0000000000000000 0000000000000000
+0x00007ffeac1adcf0:   0000000000000000 0000000000000000
+0x00007ffeac1add00:   00007ffeac1b295d 0000000000000005
+0x00007ffeac1add10:   0000000000000000 0000000001a38530
+0x00007ffeac1add20:   00007ffeac1b1e30 00007fd26e00a29b
+0x00007ffeac1add30:   0000000000000000 00007fd26e00a26b
+0x00007ffeac1add40:   0000000000000000 00007ffeac1b1fa8 
+
+Instructions: (pc=0x00007fd26dc94074)
+0x00007fd26dc94054:   8b 54 24 18 45 31 c0 44 89 e2 89 c5 8b 74 24 0c
+0x00007fd26dc94064:   48 8b 7c 24 10 41 b9 ff ff ff ff b8 ca 00 00 00
+0x00007fd26dc94074:   0f 05 89 ef 48 89 c3 e8 70 f8 ff ff e9 5c ff ff
+0x00007fd26dc94084:   ff 0f 1f 00 48 83 39 00 0f 89 16 ff ff ff b8 6e 
+
+Register to memory mapping:
+
+RAX=0x00000000000000ca is an unknown value
+RBX=0x00007fd26dfff6c0 is pointing into the stack for thread: 0x00007fd26800b800
+RCX=0x00007fd26dc94076: <offset 0x94076> in /lib/x86_64-linux-gnu/libc.so.6 at 0x00007fd26dc00000
+RDX=0x0000000000015651 is an unknown value
+RSP=0x00007ffeac1adb50 is an unknown value
+RBP=0x0000000000000000 is an unknown value
+RSI=0x0000000000000109 is an unknown value
+RDI=0x00007fd26dfff990 is pointing into the stack for thread: 0x00007fd26800b800
+R8 =0x0000000000000000 is an unknown value
+R9 =0x00000000ffffffff is an unknown value
+R10=0x0000000000000000 is an unknown value
+R11=0x0000000000000246 is an unknown value
+R12=0x0000000000015651 is an unknown value
+R13=0x00007ffeac1adc18 is an unknown value
+R14=0x00007fd26dfff990 is pointing into the stack for thread: 0x00007fd26800b800
+R15=0x00007ffeac1adba0 is an unknown value
+
+
+Stack: [0x00007ffeac0b5000,0x00007ffeac1b5000],  sp=0x00007ffeac1adb50,  free space=994k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libc.so.6+0x94074]
