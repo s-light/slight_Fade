@@ -257,58 +257,26 @@ void slight_FaderLin::printuint8_tAlignRight(uint8_t bValue) {
 // / -----------------------------------------
 //  Calc steps
 // ------------------------------------------
-bool slight_FaderLin::calculate_value(uint32_t ulDurationTemp,
-                                      uint8_t ch_index) {
-    bool bFlag_NewValues = 0;
-#ifdef debug_slight_FaderLin
-    Serial.print(F("u"));
-    Serial.print(ch_index + 10);
-    Serial.print(F(".1:target:"));
-    printArray(values_Target);
-    Serial.println();
-#endif
-
-    word wValueTemp = ((values_Dif[ch_index] * ulDurationTemp) / fadeDuration);
-#ifdef debug_slight_FaderLin
-    Serial.print(F("wValueTemp: "));
-    Serial.print(wValueTemp);
-    Serial.println();
-#endif
-
+bool slight_FaderLin::calculate_value(uint32_t durationTemp, uint8_t ch_index) {
+    bool flag_NewValues = 0;
+    uint16_t valueTemp = ((values_Dif[ch_index] * durationTemp) / fadeDuration);
     // calc result value
-    word wValue_NewCurrent = 0;
+    uint16_t value_NewCurrent = 0;
     if (values_DifIsNegativ[ch_index]) {
-        wValue_NewCurrent = values_Source[ch_index] - wValueTemp;
+        value_NewCurrent = values_Source[ch_index] - valueTemp;
     } else {
-        wValue_NewCurrent = values_Source[ch_index] + wValueTemp;
+        value_NewCurrent = values_Source[ch_index] + valueTemp;
     }
-
-#ifdef debug_slight_FaderLin
-    Serial.print(F("u"));
-    Serial.print(ch_index + 10);
-    Serial.print(F(".2:target:"));
-    printArray(values_Target);
-    Serial.println();
-#endif
-
     // check if there is a new value
-    if (wValue_NewCurrent != values_Current[ch_index]) {
-        values_Current[ch_index] = wValue_NewCurrent;
+    if (value_NewCurrent != values_Current[ch_index]) {
+        values_Current[ch_index] = value_NewCurrent;
         // set flag that there are new values..
-        bFlag_NewValues = 1;
+        flag_NewValues = 1;
     }
-
-#ifdef debug_slight_FaderLin
-    Serial.print(F("u"));
-    Serial.print(ch_index + 10);
-    Serial.print(F(".3:target:"));
-    printArray(values_Target);
-    Serial.println();
-#endif
-    return bFlag_NewValues;
+    return flag_NewValues;
 }
 
-bool slight_FaderLin::calculate_values(uint32_t ulDurationTemp) {
+bool slight_FaderLin::calculate_values(uint32_t durationTemp) {
 
     /* ulDurations steht im Verhältniss zum aktuellen wert!
         gesammt dauer zu gesamt werte differenz    =    vergangene dauer zu
@@ -318,73 +286,22 @@ bool slight_FaderLin::calculate_values(uint32_t ulDurationTemp) {
         ulRatio = vergangene dauer / gesamt dauer;
         X = WertDif * ulRatio;
             // calc Ratio
-            //unsigned long ulRatio = (ulDurationTemp / fadeDuration);
+            //unsigned long ulRatio = (durationTemp / fadeDuration);
         --> Geht nicht! da Ratio < 1 ist....
-        use: ((wValues_Dif * ulDurationTemp) / fadeDuration)
+        use: ((wValues_Dif * durationTemp) / fadeDuration)
     */
-
-#ifdef debug_slight_FaderLin
-    Serial.print(F("u 2.0:target:"));
-    printArray(values_Target);
-    Serial.println();
-#endif
-
-    bool bFlag_NewValues = 0;
+    bool flag_NewValues = 0;
 
     // for every channel calc value
     for (uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
         // or assignment - this way we change only if new values..
-        bFlag_NewValues |= calculate_value(ulDurationTemp, ch_index);
-    } // for loop
-
-    if (bFlag_NewValues) {
-        // call cbfunc for updating output values.
-        callbackValuesChanged(this, values_Current, channelCount);
-        // callbackValuesChanged(this);
+        flag_NewValues |= calculate_value(durationTemp, ch_index);
     }
 
-#ifdef debug_slight_FaderLin
-    Serial.print(F("u22.0:target:"));
-    printArray(values_Target);
-    Serial.println();
-#endif
-
-#ifdef debug_slight_FaderLin
-    Serial.print(F("values_Current: "));
-    printArray(values_Current);
-    Serial.println();
-#endif
-
-    /* old
-    // single channel version:
-        word wValueTemp = ((wValues_Dif * ulDurationTemp) / fadeDuration);
-        #ifdef debug_slight_FaderLin
-            Serial.print(F("wValueTemp: "));
-            Serial.print(wValueTemp);
-            Serial.println();
-        #endif
-        word wValue_NewCurrent = 0;
-        if (bValues_DifIsNegativ) {
-            //wValue_NewCurrent = ((wValues_Dif * ulDurationTemp) /
-    fadeDuration) - wValues_Source; wValue_NewCurrent = wValues_Source -
-    wValueTemp; } else { wValue_NewCurrent = wValues_Source + wValueTemp;
-        }
-        // check if there is a new value
-        if ( wValue_NewCurrent != wValues_Current ) {
-            wValues_Current = wValue_NewCurrent;
-            // set changes to 1
-            state = state_Fading_newValues;
-        } else {
-            // no new values..
-            state = state_Fading;
-        }
-        #ifdef debug_slight_FaderLin
-            Serial.print(F("wValues_Current: "));
-            Serial.print(wValues_Current);
-            Serial.println();
-        #endif
-    */
-    return bFlag_NewValues;
+    if (flag_NewValues) {
+        callbackValuesChanged(this, values_Current, channelCount);
+    }
+    return flag_NewValues;
 }
 
 // returns state of Fading system.
@@ -399,73 +316,26 @@ uint8_t slight_FaderLin::update() {
     if (ready == true) {
         // if fading is active calc steps
         if (Active) {
-#ifdef debug_slight_FaderLin
-            Serial.print(F("u 1.0:target:"));
-            printArray(values_Target);
-            Serial.println();
-#endif
-
             // calc duration since FadeStart
-            uint32_t ulDurationTemp = (millis() - timestamp_FadeStart);
-#ifdef debug_slight_FaderLin
-            /**/
-            Serial.print(F("ulDurationTemp: "));
-            Serial.print(ulDurationTemp);
-            Serial.println();
-            /**/
-#endif
+            uint32_t durationPosition = (millis() - timestamp_FadeStart);
             // if ulDuration < fadeDuration
-            if (ulDurationTemp < fadeDuration) {
+            if (durationPosition < fadeDuration) {
                 // set state to 'Fading';
                 stateTemp = state_Fading;
-                calculate_values(ulDurationTemp);
-
+                calculate_values(durationPosition);
             } else {
-// set values to Target. Time is Over!!
-#ifdef debug_slight_FaderLin
-                Serial.println(F("Target Time is Over... Fade is Finished!"));
-#endif
-
-#ifdef debug_slight_FaderLin
-                Serial.print(F("ff:target:"));
-                printArray(values_Target);
-                Serial.println();
-                Serial.println(F("ff:setcurrent2target"));
-#endif
-
-                // this do not work.
-                // it just sets the pointer to the same memeory location...
-                //    values_Current = values_Target;
-                // use this:
+                // set values to Target. Time is Over!!
                 for (uint8_t ch_index = 0; ch_index < channelCount;
                      ch_index++) {
                     // set end Values
                     values_Current[ch_index] = values_Target[ch_index];
                 }
 
-                // call cbfunc for updating output values.
                 callbackValuesChanged(this, values_Current, channelCount);
-                // callbackValuesChanged(this);
-
-#ifdef debug_slight_FaderLin
-                Serial.print(F("ff:target:"));
-                printArray(values_Target);
-                Serial.println();
-                Serial.print(F("ff:current:"));
-                printArray(values_Current);
-                Serial.println();
-#endif
-
-                /*
-                for ( uint8_t ch_index = 0; ch_index < channelCount; ch_index++)
-                { values_Current[ch_index] = values_Target[ch_index];
-                }*/
-                // single channel version:
-                // wValues_Current = wValues_Target;
 
                 stateTemp = state_Standby;
 
-                // set fininshed flag!
+                // set finished flag!
                 Active = 0;
                 flagFadingFinished = 1;
                 generateEvent(event_fading_Finished);
@@ -484,121 +354,52 @@ uint8_t slight_FaderLin::update() {
     return state;
 }
 
+void slight_FaderLin::startFade_setupValues(uint16_t *values_NewTarget,
+                                            uint16_t *values_uCurrent) {
+    for (uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
+        // set Source values
+        if (values_uCurrent) {
+            // use user given start values
+            values_Source[ch_index] = values_uCurrent[ch_index];
+        } else {
+            values_Source[ch_index] = values_Current[ch_index];
+        }
+        // set Target Values
+        values_Target[ch_index] = values_NewTarget[ch_index];
+        // build Dif
+        if (values_Target[ch_index] > values_Source[ch_index]) {
+            values_Dif[ch_index] =
+                values_Target[ch_index] - values_Source[ch_index];
+            values_DifIsNegativ[ch_index] = false;
+        } else {
+            values_Dif[ch_index] =
+                values_Source[ch_index] - values_Target[ch_index];
+            values_DifIsNegativ[ch_index] = true;
+        }
+    }
+}
+
 // start new Fade
+void slight_FaderLin::startFade() {
+    if (ready == true) {
+        stopFade();
+
+        timestamp_FadeStart = millis();
+        // start system
+        flagFadingFinished = 0;
+        Active = 1;
+        // just do the first calculation immediately
+        update();
+    }
+}
+
 void slight_FaderLin::startFadeTo(uint32_t fadeDuration_New,
                                   uint16_t *values_NewTarget,
                                   uint16_t *values_uCurrent) {
     if (ready == true) {
-#ifdef debug_slight_FaderLin
-        Serial.print(F("startFadeTo:  fadeDuration_New: "));
-        Serial.print(fadeDuration_New);
-        printArray(values_NewTarget);
-        Serial.println();
-#endif
-
-        // Stop Fading
-        Active = 0;
-        // reset variables.
-        flagFadingFinished = 1;
-
-        if ((flagFadingFinished)) {
-            // set Source and Target values
-            for (uint8_t ch_index = 0; ch_index < channelCount; ch_index++) {
-                // set Source values
-                if (values_uCurrent) {
-                    // use user given start values
-                    values_Source[ch_index] = values_uCurrent[ch_index];
-                } else {
-                    values_Source[ch_index] = values_Current[ch_index];
-                }
-                // set Target Values
-                values_Target[ch_index] = values_NewTarget[ch_index];
-                // build Dif
-                if (values_Target[ch_index] > values_Source[ch_index]) {
-                    values_Dif[ch_index] =
-                        values_Target[ch_index] - values_Source[ch_index];
-                    values_DifIsNegativ[ch_index] = false;
-                } else {
-                    values_Dif[ch_index] =
-                        values_Source[ch_index] - values_Target[ch_index];
-                    values_DifIsNegativ[ch_index] = true;
-                }
-            }
-
-#ifdef debug_slight_FaderLin
-            Serial.print(F("fstart:target  :"));
-            printArray(values_Target);
-            Serial.println();
-#endif
-#ifdef debug_slight_FaderLin
-            Serial.print(F("values_Source: "));
-            printArray(values_Source);
-            Serial.println();
-
-            Serial.print(F("values_Target: "));
-            printArray(values_Target);
-            Serial.println();
-
-            Serial.print(F("values_Dif   : "));
-            printArray(values_Dif);
-            Serial.println();
-            /* bool is not supported jet..
-            Serial.print(F("values_DifIsNegativ: "));
-            printArray(values_DifIsNegativ);
-            Serial.println();*/
-#endif
-
-            /*
-            // single channel version
-                // set Source values
-                wValues_Source = wValues_Current;
-                // set Target Values
-                wValues_Target = values_NewTarget[0];
-                if ( wValues_Target >= wValues_Source) {
-                    wValues_Dif = wValues_Target - wValues_Source;
-                    bValues_DifIsNegativ = false;
-                } else {
-                    wValues_Dif = wValues_Source - wValues_Target;
-                    bValues_DifIsNegativ = true;
-                }
-
-            #ifdef debug_slight_FaderLin
-                Serial.print(F("wValues_Source: "));
-                Serial.print(wValues_Source);
-                Serial.print(F("; wValues_Target:"));
-                Serial.print(wValues_Target);
-                Serial.print(F("; wValues_Dif:"));
-                Serial.print(wValues_Dif);
-                Serial.print(F("; bValues_DifIsNegativ:"));
-                Serial.print(bValues_DifIsNegativ);
-                Serial.println();
-            #endif
-            */
-            // set Start Time
-            timestamp_FadeStart = millis();
-            // set Duration
-            fadeDuration = fadeDuration_New;
-#ifdef debug_slight_FaderLin
-            Serial.print(F("fadeDuration: "));
-            Serial.print(fadeDuration);
-            Serial.println();
-#endif
-            // start system
-            flagFadingFinished = 0;
-            Active = 1;
-#ifdef debug_slight_FaderLin
-            Serial.print(F("for   update:target:"));
-            printArray(values_Target);
-            Serial.println();
-#endif
-            // just do the first calculation immediately
-            update();
-#ifdef debug_slight_FaderLin
-            Serial.print(F("after update:target:"));
-            printArray(values_Target);
-            Serial.println();
-#endif
-        }
+        fadeDuration = fadeDuration_New;
+        startFade_setupValues(values_NewTarget, values_uCurrent);
+        startFade();
     }
 }
 
@@ -637,8 +438,23 @@ void slight_FaderLin::stopFade() {
             Active = 0;
             // reset variables.
             flagFadingFinished = 1;
+            update();
         }
     }
+}
+
+void slight_FaderLin::fadeUp() {
+    if (ready == true) {
+    }
+}
+
+void slight_FaderLin::fadeDown() {
+    if (ready == true) {
+    }
+}
+
+void slight_FaderLin::setDuration(uint32_t duration) {
+    fadeDurationDefault = duration;
 }
 
 /*
