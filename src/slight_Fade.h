@@ -53,11 +53,13 @@ https://opensource.org/licenses/mit-license.php
     #define slight_Fade_h
 
     /** Includes Core Arduino functionality **/
-    #if ARDUINO < 100
-        #include <WProgram.h>
-    #else
-        #include <Arduino.h>
-    #endif
+    #include <Arduino.h>
+    
+    // #if ARDUINO  100
+    //     #include <WProgram.h>
+    // #else
+    //     #include <Arduino.h>
+    // #endif
 
     #include "mapping.h"
 
@@ -131,7 +133,8 @@ public:
     uint8_t printEvent(Print &out, uint8_t stateTemp);
 
     // fader things
-    void fadeTo(uint32_t duration, float target);
+    void fadeTo(float target, uint32_t duration);
+    void fadeTo(float target);
     void fadeUp();
     void fadeDown();
     void fadeStart();
@@ -143,7 +146,7 @@ public:
 
     uint8_t getChannelCount();
 
-    void setDuration(uint32_t duration);
+    void setDurationDefault(uint32_t duration);
 
 private:
     const uint8_t id;
@@ -172,7 +175,7 @@ private:
     uint32_t fadeDurationDefault;
 
     float position;
-    float value_current;
+    float value_new; float value_current;
     float value_target;
     float value_min;
     float value_max;

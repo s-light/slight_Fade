@@ -44,6 +44,7 @@ SOFTWARE.
 // include Core Arduino functionality
 #include <Arduino.h>
 
+#include <cstdint>
 #include <slight_Fade.h>
 
 class MyInput {
@@ -62,12 +63,13 @@ public:
     // basic library api
     void begin(Stream &out);
     void update();
+    void wait_with_update(uint32_t duration);
     void end();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // button
+    // fader
 
-    void myFader_valuesChanged(slight_Fade *instance, float value);
+    void myFader_valueChanged(slight_Fade *instance, float value);
     void myFader_event(slight_Fade *instance);
 
     slight_Fade myFader = slight_Fade(
@@ -75,13 +77,12 @@ public:
         LED_BUILTIN,
         // values changed
         // https://stackoverflow.com/questions/14189440/c-callback-using-class-member#comment110410484_14189561
-        std::bind(&MyInput::myFader_valuesChanged, this, std::placeholders::_1,
+        std::bind(&MyInput::myFader_valueChanged, this, std::placeholders::_1,
                   std::placeholders::_2),
         // event
         std::bind(&MyInput::myFader_event, this, std::placeholders::_1));
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // configurations
+    uint32_t valueChanged_debugout_lastAction;
 
 private:
 

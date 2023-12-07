@@ -40,6 +40,7 @@ SOFTWARE.
 // include Core Arduino functionality
 #include <Arduino.h>
 
+#include <cstdint>
 #include <slight_Fade.h>
 
 // include own headerfile
@@ -86,31 +87,63 @@ void MyInput::update() {
     }
 }
 
+void MyInput::wait_with_update(uint32_t duration) {
+    uint32_t end = millis() + duration;
+    uint32_t last_action = millis();
+    while (millis() < end) {
+        if (millis() > last_action + 995) {
+            last_action = millis();
+            Serial.println(".");
+        }
+        myFader.update();
+    }
+}
+
 // ------------------------------------------
 // slight_Fade things
 
-void MyInput::myFader_valuesChanged(slight_Fade *instance, float value) {
+void MyInput::myFader_valueChanged(slight_Fade *instance, float value) {
     analogWrite(LED_BUILTIN, value * 255);
+    if (millis() > valueChanged_debugout_lastAction + 330) {
+        valueChanged_debugout_lastAction = millis();
+        Serial.println(value);
+    }
 }
 
 void MyInput::myFader_event(slight_Fade *instance) {
-    Serial.print(F("instance:"));
-    Serial.print((*instance).getID());
-    Serial.print(F(" - event: "));
-    (*instance).printEventLast(Serial);
-    Serial.println();
+    // Serial.print(F("instance:"));
+    // Serial.print((*instance).getID());
+    // Serial.print(F(" - "));
+    // Serial.println();
+    // Serial.print("event: ");
+    // (*instance).printEventLast(Serial);
+    // // Serial.println();
+    // Serial.print(F(" - "));
+    // Serial.print("state: ");
+    // (*instance).printState(Serial);
+    // Serial.println();
 
-    // react on events:
     switch (instance->getEventLast()) {
+    case slight_Fade::event_fading_Paused:
+    case slight_Fade::event_fading_Stop:
     case slight_Fade::event_fading_Finished: {
-        Serial.print(F("led on pin "));
-        Serial.print((*instance).getID());
-        Serial.print(F(": fading Finished."));
+        // Serial.print(F("led on pin "));
+        // Serial.print((*instance).getID());
+        // Serial.print(F(": "));
+        // Serial.print(F("fading Finished."));
+        // Serial.println();
+        // Serial.print("event: ");
+        (*instance).printEventLast(Serial);
+        Serial.println();
+    } break;
+    case slight_Fade::event_StateChanged: {
+        Serial.print("state: ");
+        (*instance).printState(Serial);
         Serial.println();
     } break;
     } // end switch
-}
+    }
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// THE END
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // THE END
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

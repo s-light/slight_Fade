@@ -92,11 +92,9 @@ THE SOFTWARE. http://opensource.org/licenses/mit-license.php
 // initialize chChannelCount
 // http://forum.arduino.cc/index.php?topic=188261.msg1393390#msg1393390
 slight_Fade::slight_Fade(
-    uint8_t id_new,
-    tCallbackFunctionValuesChanged callbackValuesChanged_new,
+    uint8_t id_new, tCallbackFunctionValuesChanged callbackValuesChanged_new,
     tCallbackFunction callbackOnEvent_new)
-    : id(id_new),
-      callbackValuesChanged(callbackValuesChanged_new),
+    : id(id_new), callbackValuesChanged(callbackValuesChanged_new),
       callbackOnEvent(callbackOnEvent_new)
 // NOLINTNEXTLINE(whitespace/braces)
 {
@@ -131,9 +129,13 @@ bool slight_Fade::isReady() { return ready; }
 // ------------------------------------------
 bool slight_Fade::calculateValue() {
     bool flag_NewValue = 0;
+    value_new = position;
+    if (state == state_FadingDown) {
+        value_new = (1.0 - position);
+    }
     // check if there is a new value
-    if (position != value_current) {
-        value_current = position;
+    if (value_new != value_current) {
+        value_current = value_new;
         flag_NewValue = 1;
     }
     return flag_NewValue;
@@ -147,7 +149,7 @@ uint8_t slight_Fade::update() {
         state_Fading                = 2;
         state_Fading_newValues        = 10;
     **/
-    uint8_t stateTemp = state_NotValid;
+    uint8_t stateTemp = state;
     if (ready == true) {
         // if fading is active calc steps
         if (Active) {
@@ -192,7 +194,19 @@ uint8_t slight_Fade::update() {
 // start new Fade
 void slight_Fade::fadeStart() {
     if (ready == true) {
-        fadePause();
+        // reset
+        // fadePause();
+        Serial.print("fadeStart");
+        Serial.print(": ");
+        Serial.print("position ");
+        Serial.print(position);
+        Serial.print("; ");
+        Serial.print("value_target ");
+        Serial.print(value_target);
+        Serial.print("; ");
+        Serial.print("value_current ");
+        Serial.print(value_current);
+        Serial.println();
         // start system
         uint8_t stateTemp = state_NotValid;
         if (value_target > value_current) {
@@ -213,7 +227,7 @@ void slight_Fade::fadeStart() {
     }
 }
 
-void slight_Fade::fadeTo(uint32_t duration, float target) {
+void slight_Fade::fadeTo(float target, uint32_t duration) {
     if (ready == true) {
         fadeDuration = duration;
         timestamp_FadeStart = millis();
@@ -222,6 +236,7 @@ void slight_Fade::fadeTo(uint32_t duration, float target) {
         fadeStart();
     }
 }
+void slight_Fade::fadeTo(float target) { fadeTo(target, fadeDurationDefault); }
 
 void slight_Fade::fadeUp() {
     if (ready == true) {
@@ -258,7 +273,7 @@ void slight_Fade::fadeStop() {
     }
 }
 
-void slight_Fade::setDuration(uint32_t duration) {
+void slight_Fade::setDurationDefault(uint32_t duration) {
     fadeDurationDefault = duration;
 }
 

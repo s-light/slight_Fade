@@ -63,11 +63,13 @@ void setup() {
     // ------------------------------------------
     // print short welcome text
     Serial.println(F("slight_FaderLin__advanced2.ino"));
-    Serial.println(F("minimal example for library usage."));
+    Serial.println(F("example for library usage."));
 
     // ------------------------------------------
     myinput.begin(Serial);
 
+    myinput.myFader.setDurationDefault(5* 1000);
+    
     // ------------------------------------------
     Serial.println(F("Loop:"));
 }
@@ -78,7 +80,35 @@ void setup() {
 // ------------------------------------------
 void loop() {
     myinput.update();
-    // nothing else to do here...
+
+    Serial.println();
+    Serial.println("run tests:");
+    // just do a bunch of test fades
+    Serial.println("fadeTo 1");
+    myinput.myFader.fadeTo(1.0, 5*1000);
+    myinput.wait_with_update(10 * 1000);
+    
+    Serial.println("fadeTo 0 in 2s");
+    myinput.myFader.fadeTo(0, 2 * 1000);
+    myinput.wait_with_update(10 * 1000);
+
+    // Serial.println("fadeUp");
+    // myinput.myFader.fadeUp();
+    // myinput.wait_with_update(6 * 1000);
+    // Serial.println("fadePause");
+    // myinput.myFader.fadePause();
+    // myinput.wait_with_update(2 * 1000);
+    // Serial.println("fadeDown");
+    // myinput.myFader.fadeDown();
+    // myinput.wait_with_update(3 * 1000);
+    // Serial.println("fadePause");
+    // myinput.myFader.fadePause();
+
+    Serial.println("done.");
+    Serial.println();
+    Serial.println();
+    Serial.println();
+    delay(10 * 1000);
 }
 
 
