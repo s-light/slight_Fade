@@ -90,11 +90,16 @@ void MyInput::update() {
 void MyInput::wait_with_update(uint32_t duration) {
     uint32_t end = millis() + duration;
     uint32_t last_action = millis();
+    uint32_t update_last_action = millis();
     while (millis() < end) {
         if (millis() > last_action + 995) {
             last_action = millis();
             Serial.println(".");
         }
+        // if (millis() > update_last_action + 100) {
+        //     update_last_action = millis();
+        //     myFader.update();
+        // }
         myFader.update();
     }
 }
@@ -106,7 +111,7 @@ void MyInput::myFader_valueChanged(slight_Fade *instance, float value) {
     analogWrite(LED_BUILTIN, value * 255);
     if (millis() > valueChanged_debugout_lastAction + 330) {
         valueChanged_debugout_lastAction = millis();
-        Serial.println(value);
+        Serial.println(value, 5);
     }
 }
 
@@ -142,8 +147,8 @@ void MyInput::myFader_event(slight_Fade *instance) {
         Serial.println();
     } break;
     } // end switch
-    }
+}
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // THE END
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// THE END
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

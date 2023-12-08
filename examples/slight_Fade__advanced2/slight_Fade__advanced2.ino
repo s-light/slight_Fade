@@ -5,10 +5,8 @@
         debugport: serial interface 115200baud
 
     hardware:
-        Arduino board of any typ.
-        A3 --> Pushbutton closing to GND
-        A4 --> Pushbutton closing to GND
-        A5 --> Pushbutton closing to GND
+        Arduino board of any typ
+        LED_BUILTIN
 
     libraries used:
         ~ slight_Fader
@@ -43,14 +41,17 @@ SOFTWARE.
 https://opensource.org/licenses/mit-license.php
 ******************************************/
 
+#include "esp32-hal.h"
+#include "esp_private/system_internal.h"
+
 #include "myinput.h"
 
 // MyInput myinput = MyInput(Serial);
 MyInput myinput = MyInput();
 
-// ------------------------------------------
-// setup
-// ------------------------------------------
+uint32_t last_action = millis();
+uint32_t update_last_action = millis();
+
 void setup() {
     // ------------------------------------------
     // init serial
@@ -68,41 +69,140 @@ void setup() {
     // ------------------------------------------
     myinput.begin(Serial);
 
-    myinput.myFader.setDurationDefault(5* 1000);
-    
+    myinput.myFader.setDurationDefault(5 * 1000);
+
     // ------------------------------------------
     Serial.println(F("Loop:"));
 }
 
+void reboot_to_uf2(void) {
+    // https://github.com/adafruit/tinyuf2/blob/8a54e0ed4c3373765903ca6d80eeb54dbcfc54d5/ports/esp32s2/README.md#usage
+    // Check out esp_reset_reason_t for other Espressif pre-defined values
+    enum {
+        APP_REQUEST_UF2_RESET_HINT = 0x11F2
+    };
 
-// ------------------------------------------
-// main loop
-// ------------------------------------------
-void loop() {
+    // call esp_reset_reason() is required for idf.py to properly links
+    // esp_reset_reason_set_hint()
+    (void)esp_reset_reason();
+    esp_reset_reason_set_hint(static_cast<esp_reset_reason_t>(APP_REQUEST_UF2_RESET_HINT
+    ));
+    esp_restart();
+}
+
+void handle_serial_input() {
+    if (Serial.available() > 0) {
+        char input = Serial.read();
+
+        // check what to do:
+        switch (input) {
+            case 'r': {
+                Serial.println("reboot_to_uf2");
+                reboot_to_uf2();
+            } break;
+            case 't': {
+                Serial.println("run_tests");
+                run_tests();
+            } break;
+            case '1': {
+                Serial.println("fadeTo 0.5 in 0s");
+                myinput.myFader.fadeTo(0.5, 0 * 1000);
+            } break;
+            case '2': {
+                Serial.println("fadeTo 0.1 in 10s");
+                myinput.myFader.fadeTo(0.1, 10 * 1000);
+            } break;
+            case '3': {
+                Serial.println("fadeTo 0.8 in 5s");
+                myinput.myFader.fadeTo(0.8, 5 * 1000);
+            } break;
+            default: {
+                Serial.println("options:");
+                Serial.println(" r: reboot_to_uf2");
+                Serial.println(" t: run_tests");
+                Serial.println(" 1: fadeTo 0.5 in 0s");
+                Serial.println(" 2: fadeTo 0.1 in 10s");
+                Serial.println(" 3: fadeTo 0.8 in 5s");
+            }
+        }
+
+        // clear input buffer
+        while (Serial.available()) {
+            Serial.read();
+        }
+    }
+}
+
+void run_tests() {
     myinput.update();
 
     Serial.println();
     Serial.println("run tests:");
     // just do a bunch of test fades
-    Serial.println("fadeTo 1");
-    myinput.myFader.fadeTo(1.0, 5*1000);
-    myinput.wait_with_update(10 * 1000);
-    
-    Serial.println("fadeTo 0 in 2s");
-    myinput.myFader.fadeTo(0, 2 * 1000);
-    myinput.wait_with_update(10 * 1000);
+
+    // Serial.println("fadeTo 0.5 in 3s");
+    // myinput.myFader.fadeTo(0.5, 3 * 1000);
+    // myinput.wait_with_update(6 * 1000);
+
+    // Serial.println("fadeTo 0 in 4s");
+    // myinput.myFader.fadeTo(0, 4 * 1000);
+    // myinput.wait_with_update(10 * 1000);
 
     // Serial.println("fadeUp");
     // myinput.myFader.fadeUp();
-    // myinput.wait_with_update(6 * 1000);
+    // myinput.wait_with_update(4 * 1000);
     // Serial.println("fadePause");
     // myinput.myFader.fadePause();
+    // Serial.print("currentValue: ");
+    // Serial.println(myinput.myFader.getValue());
+
     // myinput.wait_with_update(2 * 1000);
+
     // Serial.println("fadeDown");
     // myinput.myFader.fadeDown();
     // myinput.wait_with_update(3 * 1000);
     // Serial.println("fadePause");
     // myinput.myFader.fadePause();
+    // Serial.println(myinput.myFader.getValue());
+
+    myinput.wait_with_update(2 * 1000);
+
+    Serial.println("fadeTo 0.8 in 0s");
+    myinput.myFader.fadeTo(0.8, 0 * 1000);
+    myinput.wait_with_update(4 * 1000);
+    Serial.println(myinput.myFader.getValue());
+
+    myinput.wait_with_update(2 * 1000);
+
+    // Serial.println("fadeUp");
+    // myinput.myFader.fadeUp();
+    // myinput.wait_with_update(2 * 1000);
+    // Serial.println("fadePause");
+    // myinput.myFader.fadePause();
+    // Serial.print("currentValue: ");
+    // Serial.println(myinput.myFader.getValue());
+
+    Serial.println("fadeTo 0.5 in 0s");
+    myinput.myFader.fadeTo(0.5, 0 * 1000);
+    myinput.wait_with_update(4 * 1000);
+    Serial.println(myinput.myFader.getValue());
+
+    // Serial.println("fadeDown");
+    // myinput.myFader.fadeDown();
+    // myinput.wait_with_update(3 * 1000);
+    // Serial.println("fadePause");
+    // myinput.myFader.fadePause();
+    // Serial.println(myinput.myFader.getValue());
+
+    // myinput.wait_with_update(2 * 1000);
+
+    // Serial.println("fadeUp");
+    // myinput.myFader.fadeUp();
+    // myinput.wait_with_update(2 * 1000);
+    // Serial.println("fadePause");
+    // myinput.myFader.fadePause();
+    // Serial.print("currentValue: ");
+    // Serial.println(myinput.myFader.getValue());
 
     Serial.println("done.");
     Serial.println();
@@ -111,6 +211,21 @@ void loop() {
     delay(10 * 1000);
 }
 
+// ------------------------------------------
+void loop() {
+    handle_serial_input();
+
+    if (millis() > last_action + 999) {
+        last_action = millis();
+        Serial.println(millis());
+    }
+
+    // if (millis() > update_last_action + 100) {
+    //     update_last_action = millis();
+    //     myinput.myFader.update();
+    // }
+    myinput.myFader.update();
+}
 
 // ------------------------------------------
 // THE END :-)

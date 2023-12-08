@@ -54,14 +54,9 @@ https://opensource.org/licenses/mit-license.php
 
     /** Includes Core Arduino functionality **/
     #include <Arduino.h>
-    
-    // #if ARDUINO  100
-    //     #include <WProgram.h>
-    // #else
-    //     #include <Arduino.h>
-    // #endif
 
-    #include "mapping.h"
+    #include <slight_easing.h>
+    #include <slight_mapping.h>
 
     #if defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_ESP32)
         // fix  "error: macro "min" passed 3 arguments, but takes just 2"
@@ -69,8 +64,6 @@ https://opensource.org/licenses/mit-license.php
         #undef max
         #include <functional>
     #endif
-
-/** Class Definition: **/
 
 class slight_Fade {
 public:
@@ -133,6 +126,7 @@ public:
     uint8_t printEvent(Print &out, uint8_t stateTemp);
 
     // fader things
+    void fadeTo(float target, uint32_t duration, float source);
     void fadeTo(float target, uint32_t duration);
     void fadeTo(float target);
     void fadeUp();
@@ -157,39 +151,35 @@ private:
 
     uint8_t state;
     uint8_t stateOld;
+    uint8_t setState(uint8_t state_);
 
-    uint8_t event;
-    uint8_t eventLast;
+        uint8_t event;
+        uint8_t eventLast;
 
-    // call back functions:
-    const tCallbackFunction callbackOnEvent;
-    const tCallbackFunctionValuesChanged callbackValuesChanged;
+        // call back functions:
+        const tCallbackFunction callbackOnEvent;
+        const tCallbackFunctionValuesChanged callbackValuesChanged;
 
-    bool flagFadingFinished;
-    bool Active;
+        bool flagFadingFinished;
+        bool Active;
 
-    uint32_t timestamp_FadeStart;
-    uint32_t timestamp_FadeEnd;
-    uint32_t fadeRuntime;
-    uint32_t fadeDuration;
-    uint32_t fadeDurationDefault;
+        uint32_t timestamp_FadeStart;
+        uint32_t timestamp_FadeEnd;
+        uint32_t fadeRuntime;
+        uint32_t fadeDuration;
+        uint32_t fadeDurationDefault;
 
-    float position;
-    float value_new; float value_current;
-    float value_target;
-    float value_min;
-    float value_max;
+        float position = 0.0;
+        float position_w_easing = 0.0;
+        float value_old = 0.0;
+        float value_current = 0.0;
+        float value_source = 0.0;
+        float value_target = 0.0;
+        float value_min = 0.0;
+        float value_max = 0.0;
 
-    bool calculateValue();
-
-    // for testing --> SingleChannel Version
-    /*
-    uint16_t values_Source;
-    uint16_t values_Target;
-    uint16_t values_Current;
-    uint16_t values_Dif;
-    bool bValues_DifIsNegativ;
-    */
+        bool calculateValue();
+        void fading_update();
 
     // private methods
     #ifdef debug_slight_Fade
@@ -197,7 +187,7 @@ private:
     #endif
 
     void generateEvent(uint8_t eventNew);
-};
+    };
 
 #endif // ifndef slight_Fade_h
 
