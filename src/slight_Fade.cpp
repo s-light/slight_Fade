@@ -94,13 +94,15 @@ THE SOFTWARE. http://opensource.org/licenses/mit-license.php
 // initialize chChannelCount
 // http://forum.arduino.cc/index.php?topic=188261.msg1393390#msg1393390
 slight_Fade::slight_Fade(
-    uint8_t id_new,
-    tCallbackFunctionValuesChanged callbackValuesChanged_new,
-    tCallbackFunction callbackOnEvent_new
+    uint8_t id_,
+    tCallbackFunctionValuesChanged callbackValuesChanged_,
+    tCallbackFunction callbackOnEvent_,
+    tEasingFunction easing_fn_
 )
-    : id(id_new),
-      callbackValuesChanged(callbackValuesChanged_new),
-      callbackOnEvent(callbackOnEvent_new)
+    : id(id_),
+      callbackValuesChanged(callbackValuesChanged_),
+      callbackOnEvent(callbackOnEvent_),
+      easing_fn(easing_fn_)
 // NOLINTNEXTLINE(whitespace/braces)
 {
     state = state_NotValid;
@@ -145,7 +147,7 @@ bool slight_Fade::isReady() {
 bool slight_Fade::calculateValue() {
     bool flag_NewValue = 0;
     // TODO: apply easing function
-    position_w_easing = position;
+    position_w_easing = easing_fn(position);
     value_current = map_range_01_to(position_w_easing, value_source, value_target);
     // check if there is a new value
     if (value_old != value_current) {
@@ -445,7 +447,7 @@ float slight_Fade::getValue() {
 }
 
 void slight_Fade::setValue(float value_new) {
-    value_current = value_new;
+    fadePause(); value_current = value_new;
     // flagFadingFinished = 1;
     // TODO: check what to do here... should we stop the current fade?
     update();

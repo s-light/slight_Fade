@@ -44,8 +44,6 @@ https://opensource.org/licenses/mit-license.php
 #include <Arduino.h>
 
 #include <slight_Fade.h>
-#include "esp32-hal-gpio.h"
-#include "pins_arduino.h"
 
 // ------------------------------------------
 // slight_Fade things
@@ -88,23 +86,23 @@ void myFader_event(slight_Fade* instance) {
     }  // end switch
 }
 
-// slight_Fade myFader = slight_Fade(
-//     // uint8_t id
-//     LED_BUILTIN,
-//     // values changed
-//     std::bind(
-//         &myFader_valueChanged, this, std::placeholders::_1, std::placeholders::_2
-//     ),
-//     // event
-//     std::bind(&myFader_event, this, std::placeholders::_1)
+// this way we use the easeLinear default.
+// slight_Fade myFaderLinear = slight_Fade(
+//     0, // id
+//     myFader_valueChanged,
+//     myFader_event
 // );
+
+// use one of the easing functions from
+// https://github.com/s-light/slight_easing/
+// a visual helper can be found at
+// https://easings.net/
+
 slight_Fade myFader = slight_Fade(
-    // uint8_t id
-    LED_BUILTIN,
-    // values changed
+    0,  // id
     myFader_valueChanged,
-    // event
-    myFader_event
+    myFader_event,
+    easeCubicIn
 );
 
 // ------------------------------------------
