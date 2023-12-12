@@ -83,6 +83,7 @@ THE SOFTWARE. http://opensource.org/licenses/mit-license.php
 // NOLINTNEXTLINE(build/include)
 #include "./slight_Fade.h"
 // #include <slight_mapping.h>
+#include <algorithm>
 #include <cstdint>
 // use "" for files in same directory as .ino
 
@@ -107,6 +108,15 @@ slight_Fade::slight_Fade(
 {
     state = state_NotValid;
 
+    position = 0.0;
+    position_w_easing = 0.0;
+    value_old = 0.0;
+    value_current = 0.0;
+    value_source = 0.0;
+    value_target = 0.0;
+    value_min = 0.0;
+    value_max = 1.0;
+
     ready = false;
 }
 
@@ -119,15 +129,6 @@ slight_Fade::~slight_Fade() {
 void slight_Fade::begin() {
     if (ready == false) {
         state = state_Standby;
-
-        position = 0.0;
-        position_w_easing = 0.0;
-        value_old = 0.0;
-        value_current = 0.0;
-        value_source = 0.0;
-        value_target = 0.0;
-        value_min = 0.0;
-        value_max = 0.0;
 
         ready = true;
     }
@@ -242,7 +243,7 @@ void slight_Fade::fadeStart() {
             flagFadingFinished = 0;
             value_old = -1;
         } else {
-                setState(state_Standby);
+            setState(state_Standby);
         }
         // just do the first calculation immediately
         update();
@@ -251,6 +252,17 @@ void slight_Fade::fadeStart() {
 
 void slight_Fade::fadeTo(float target, uint32_t duration, float source) {
     if (ready == true) {
+        Serial.printf(
+            "slight_Fade fadeTo(target %f, duration %d, source %f)\r\n",
+            target,
+            duration,
+            source
+        );
+        // if (duration == NULL) {
+        //     fadeDuration = fadeDurationDefault;
+        // } else {
+        //     fadeDuration = duration;
+        // }
         fadeDuration = duration;
         if (fadeDuration == 0) {
             // fix overflow / inf / nan problems if start and end are
@@ -259,13 +271,24 @@ void slight_Fade::fadeTo(float target, uint32_t duration, float source) {
         }
         timestamp_FadeStart = millis();
         timestamp_FadeEnd = timestamp_FadeStart + fadeDuration;
+        // if (source == NULL) {
+        //     value_source = value_current;
+        // } else {
+        //     value_source = std::clamp(source, value_min, value_max);
+        // }
         value_source = source;
-        value_target = target;
+        value_target = std::clamp(target, value_min, value_max);
+        Serial.printf(
+            "slight_Fade fadeTo: value_target %f    value_source %f \r\n",
+            value_target,
+            value_source
+        );
         fadeStart();
     }
 }
 
 void slight_Fade::fadeTo(float target, uint32_t duration) {
+    Serial.printf("slight_Fade fadeTo(target %f, duration %d)\r\n", target, duration);
     fadeTo(target, duration, value_current);
 }
 void slight_Fade::fadeTo(float target) {
@@ -291,7 +314,7 @@ void slight_Fade::fadeUp() {
         Serial.print(duration);
         Serial.print("; ");
         Serial.println();
-        fadeTo(1.0, duration);
+        fadeTo(value_max, duration);
     }
 }
 
@@ -314,12 +337,13 @@ void slight_Fade::fadeDown() {
         Serial.print(duration);
         Serial.print("; ");
         Serial.println();
-        fadeTo(0.0, duration);
+        fadeTo(value_min, duration);
     }
 }
 
 void slight_Fade::fadePause() {
     if (ready == true) {
+        Serial.println("slight_Fade fadePause");
         setState(state_Standby);
         update();
     }
@@ -327,13 +351,11 @@ void slight_Fade::fadePause() {
 
 void slight_Fade::fadeStop() {
     if (ready == true) {
+        Serial.println("slight_Fade fadeStop");
         // if fading is active in some way..
         //  or only paused finished yet
-        if (
-            (state == state_FadingUp) 
-            or (state == state_FadingDown)
-            or (!flagFadingFinished)
-        ) {
+        if ((state == state_FadingUp) or (state == state_FadingDown)
+            or (!flagFadingFinished)) {
             setState(state_Standby);
             flagFadingFinished = 1;
             update();
@@ -447,10 +469,21 @@ float slight_Fade::getValue() {
 }
 
 void slight_Fade::setValue(float value_new) {
-    fadePause(); value_current = value_new;
-    // flagFadingFinished = 1;
-    // TODO: check what to do here... should we stop the current fade?
-    update();
+    // fadePause();
+    // value_current = value_new;
+    // callbackValuesChanged(this, value_current);
+    fadeTo(value_new, 0);
+}
+
+void slight_Fade::setValueRange(float min_, float max_) {
+    value_min = min_;
+    value_max = max_;
+    // TODO: define what to do if values change during standby..
+    // will this generate a new current value? mapped from old valueRange to new?
+}
+
+float slight_Fade::getPosition() {
+    return position;
 }
 
 // ********************************************

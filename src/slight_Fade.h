@@ -57,6 +57,7 @@ https://opensource.org/licenses/mit-license.php
 
     #include <slight_easing.h>
     #include <slight_mapping.h>
+#include <cstddef>
 
     #if defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_ESP32)
         // fix  "error: macro "min" passed 3 arguments, but takes just 2"
@@ -129,6 +130,7 @@ public:
     uint8_t printEvent(Print& out, uint8_t stateTemp);
 
     // fader things
+    // void fadeTo(float target, uint32_t duration = NULL, float source = NULL);
     void fadeTo(float target, uint32_t duration, float source);
     void fadeTo(float target, uint32_t duration);
     void fadeTo(float target);
@@ -140,6 +142,11 @@ public:
 
     float getValue();
     void setValue(float value);
+    
+    void setValueRange(float min_, float max_);
+    
+    float getPosition();
+
 
     uint8_t getChannelCount();
 
@@ -179,7 +186,7 @@ private:
     float value_source = 0.0;
     float value_target = 0.0;
     float value_min = 0.0;
-    float value_max = 0.0;
+    float value_max = 1.0;
 
     tEasingFunction easing_fn;
     bool calculateValue();
