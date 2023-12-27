@@ -45,6 +45,17 @@ SOFTWARE.
 #include <cstdint>
 #include <slight_Fade.h>
 
+
+
+#ifndef ARDUINO_ARCH_ESP32
+
+#warning this example is partly written for ESP32 boards..
+
+#endif
+
+
+
+
 #include "esp32-hal.h"
 #include "esp_private/system_internal.h"
 
